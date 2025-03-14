@@ -13,15 +13,15 @@ Route::prefix('api')->group( function() {
         ->middleware(['auth', 'verified'])
         ->name('api.endpoints.store');
 
-    Route::delete('/endpoints/{apiEndpoint}', [EndpointsController::class, 'destroy'])
+    Route::delete('/endpoints/{endpoint}', [EndpointsController::class, 'destroy'])
         ->middleware(['auth', 'verified'])
         ->name('api.endpoints.destroy');
 
-    Route::get('/endpoints/{apiEndpoint}', [EndpointsController::class, 'show'])
+    Route::get('/endpoints/{endpoint}', [EndpointsController::class, 'show'])
         ->middleware(['auth', 'verified'])
         ->name('api.endpoints.show');
 
-    Route::put('/endpoints/{apiEndpoint}', [EndpointsController::class, 'update'])
+    Route::put('/endpoints/{endpoint}', [EndpointsController::class, 'update'])
         ->middleware(['auth', 'verified'])
         ->name('api.endpoints.update');
         
