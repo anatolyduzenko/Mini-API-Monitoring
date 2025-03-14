@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreEndpointRequest;
-use App\Http\Requests\UpdateEndpointRequest;
+use App\Http\Requests\Api\UpdateEndpointRequest;
 use App\Models\Endpoint;
-use Illuminate\Http\Request;
 
 class EndpointsController extends Controller
 {
