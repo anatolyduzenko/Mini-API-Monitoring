@@ -25,8 +25,8 @@ class UpdateEndpointRequest extends FormRequest
             'name' => 'required|string|max:255',
             'url' => 'required|url',
             'method' => 'required|string|in:GET,POST,PUT,DELETE',
-            'headers' => 'string|max:1024',
-            'body' => 'string|max:1024',
+            'headers' => 'string|nullable|max:1024',
+            'body' => 'string|nullable|max:1024',
             'check_interval' => 'required|integer|min:1',
         ];
     }

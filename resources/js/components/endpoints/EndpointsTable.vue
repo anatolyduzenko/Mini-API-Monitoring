@@ -2,19 +2,11 @@
     import { ref, onMounted } from "vue";
     import { route } from "ziggy-js";
     
-    import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-    } from '@/components/ui/table'
-
-    import EndpointRow from "@/components/endpoints/EndpointRow.vue";
-    import EndpointForm from "@/components/endpoints/EndpointForm.vue";
     import { TailwindPagination } from 'laravel-vue-pagination';
+
+    import EndpointForm from "@/components/endpoints/EndpointForm.vue";
+    import EndpointsTableDesktop from "@/components/endpoints/EndpointsTableDesktop.vue";
+    import EndpointsTableMobile from "@/components/endpoints/EndpointsTableMobile.vue";
 
     const endpoints = ref([]);
     const errors = ref({});
@@ -29,7 +21,7 @@
 
     const fetchEndpoints = async (page = 1) => {
         try {
-            const response = await fetch(route("api.endpoints.index")); 
+            const response = await fetch(route("api.endpoints.index", {page: page})); 
             endpoints.value = await response.json();
         } catch (error) {
             console.error("Error fetching endpoints:", error);
@@ -56,7 +48,7 @@
                 : route("api.endpoints.store");
 
             const method = endpoint.id ? "PUT" : "POST";
-
+            console.log(requestHeaders);
             const response = await fetch(url, {
                 method: method,
                 headers: requestHeaders,
@@ -100,40 +92,24 @@
 
 
 <template>
-    <div>
+    <div >
         <div class="p-4">
-            <button @click="openCreateForm" class="bg-blue-500 text-white px-4 py-2 rounded mb-4">+ Add Endpoint</button>
+            <button @click="openCreateForm" class="bg-blue-500 text-white px-4 py-2 rounded">+ Add Endpoint</button>
         </div>
-        <Table>
-            <TableCaption>A list of your monitored endpoints.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                <TableHead class="w-[100px]">
-                    Name
-                </TableHead>
-                <TableHead>URL</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Interval</TableHead>
-                <TableHead class="text-right">
-                    Actions
-                </TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                <EndpointRow 
-                    v-for="endpoint in endpoints.data" 
-                    :key="endpoint.id" 
-                    :endpoint="endpoint" 
-                    @edit="openEditForm"
-                    @delete="deleteEndpoint"    
-                />
-            </TableBody>
-        </Table>
+        <div class="p-4">
+            <TailwindPagination
+                :data="endpoints"
+                @pagination-change-page="fetchEndpoints"
+            />
+        </div>
+        <div class="hidden md:block">
+            <EndpointsTableDesktop :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
+        </div>
 
-        <TailwindPagination
-            :data="endpoints"
-            @pagination-change-page="fetchEndpoints"
-        />
+        <div class="block md:hidden space-y-4">
+            <EndpointsTableMobile :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
+        </div>
+        
 
         <EndpointForm
             :show="showModal"
@@ -141,7 +117,7 @@
             :errors="errors"
             @close="showModal = false"
             @submit="submitForm"
-        />
+        />        
 
     </div>
 </template>

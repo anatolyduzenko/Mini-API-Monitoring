@@ -14,7 +14,7 @@ class EndpointsController extends Controller
      */
     public function index()
     {
-        return response()->json(Endpoint::paginate(35));
+        return response()->json(Endpoint::paginate(10));
     }
 
     /**
