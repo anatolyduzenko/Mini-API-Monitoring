@@ -14,4 +14,9 @@ class Endpoint extends Model
         'body',
         'check_interval'
     ];
+
+    public function logs() {
+        return $this->hasMany(EndpointLog::class);
+    }
+    
 }
