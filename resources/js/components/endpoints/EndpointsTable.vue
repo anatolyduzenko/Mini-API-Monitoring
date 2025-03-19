@@ -1,129 +1,121 @@
 <script setup lang="ts">
-    import { ref, onMounted } from "vue";
-    import { route } from "ziggy-js";
-    
-    import { TailwindPagination } from 'laravel-vue-pagination';
+import { onMounted, ref } from 'vue';
+import { route } from 'ziggy-js';
 
-    import EndpointForm from "@/components/endpoints/EndpointForm.vue";
-    import EndpointsTableDesktop from "@/components/endpoints/EndpointsTableDesktop.vue";
-    import EndpointsTableMobile from "@/components/endpoints/EndpointsTableMobile.vue";
+import { TailwindPagination } from 'laravel-vue-pagination';
 
-    const endpoints = ref([]);
-    const errors = ref({});
-    const currentUser = ref(null);
-    const showModal = ref(false);
-    const isEditing = ref(false);
-    const selectedEndpoint = ref(null);
+import EndpointForm from '@/components/endpoints/EndpointForm.vue';
+import EndpointsTableDesktop from '@/components/endpoints/EndpointsTableDesktop.vue';
+import EndpointsTableMobile from '@/components/endpoints/EndpointsTableMobile.vue';
 
-    const requestHeaders = new Headers();
-    requestHeaders.append("Content-Type", "application/json");
-    requestHeaders.append("Accept", "application/json");
-    requestHeaders.append("X-CSRF-TOKEN",  document.querySelector('meta[name="csrf-token"]').getAttribute('content'));            
+const endpoints = ref([]);
+const errors = ref({});
+const currentUser = ref(null);
+const showModal = ref(false);
+const isEditing = ref(false);
+const selectedEndpoint = ref(null);
 
-    const fetchEndpoints = async (page = 1) => {
-        try {
-            const response = await fetch(route("api.endpoints.index", {page: page})); 
-            endpoints.value = await response.json();
-        } catch (error) {
-            console.error("Error fetching endpoints:", error);
-        }
-    };
+const requestHeaders = new Headers();
+requestHeaders.append('Content-Type', 'application/json');
+requestHeaders.append('Accept', 'application/json');
+requestHeaders.append('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
-    const fetchCurrentUser = async () => {
-        try {
-            const response = await fetch(route("api.user"));
-            currentUser.value = await response.json();
-            console.log(currentUser);
-        } catch (error) {
-            console.error("Error fetching user:", error);
-        }
-    };
+const fetchEndpoints = async (page = 1) => {
+    try {
+        const response = await fetch(route('api.endpoints.index', { page: page }));
+        endpoints.value = await response.json();
+    } catch (error) {
+        console.error('Error fetching endpoints:', error);
+    }
+};
 
-    const openCreateForm = () => {
-        isEditing.value = false;
-        selectedEndpoint.value = { id: null, name: "", url: "", method: "GET", check_interval: 5 };
-        showModal.value = true;
-    };
+const fetchCurrentUser = async () => {
+    try {
+        const response = await fetch(route('api.user'));
+        currentUser.value = await response.json();
+        console.log(currentUser);
+    } catch (error) {
+        console.error('Error fetching user:', error);
+    }
+};
 
-    const openEditForm = (endpoint) => {
-        isEditing.value = true;
-        selectedEndpoint.value = { ...endpoint };
-        showModal.value = true;
-    };
+const openCreateForm = () => {
+    isEditing.value = false;
+    selectedEndpoint.value = { id: null, name: '', url: '', method: 'GET', check_interval: 5 };
+    showModal.value = true;
+};
 
-    const submitForm = async (endpoint) => {
-        errors.value = {};
-        try {
-            const url = endpoint.id
-                ? route("api.endpoints.update", [ endpoint.id ])
-                : route("api.endpoints.store");
+const openEditForm = (endpoint) => {
+    isEditing.value = true;
+    selectedEndpoint.value = { ...endpoint };
+    showModal.value = true;
+};
 
-            const method = endpoint.id ? "PUT" : "POST";
-            console.log(requestHeaders);
-            const response = await fetch(url, {
-                method: method,
-                headers: requestHeaders,
-                body: JSON.stringify(endpoint),
-            });
+const submitForm = async (endpoint) => {
+    errors.value = {};
+    try {
+        const url = endpoint.id ? route('api.endpoints.update', [endpoint.id]) : route('api.endpoints.store');
 
-            const data = await response.json();
+        const method = endpoint.id ? 'PUT' : 'POST';
+        console.log(requestHeaders);
+        const response = await fetch(url, {
+            method: method,
+            headers: requestHeaders,
+            body: JSON.stringify(endpoint),
+        });
 
-            if (!response.ok) {
-                if (response.status === 422) {
-                    errors.value = data.errors;
-                } else {
-                    throw new Error(data.message || 'Something went wrong');
-                }
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 422) {
+                errors.value = data.errors;
             } else {
-                showModal.value = false;
-                fetchEndpoints();
+                throw new Error(data.message || 'Something went wrong');
             }
-        } catch (error) {
-            console.error("Error saving endpoint:", error);
-        }
-    };
-
-    const deleteEndpoint = async (endpoint) => {
-        if (!confirm("Are you sure you want to delete this endpoint?")) return;
-
-        try {
-            
-            await fetch(route("api.endpoints.destroy", [ endpoint.id ]), { 
-                method: "DELETE",
-                headers: requestHeaders,
-            });
+        } else {
+            showModal.value = false;
             fetchEndpoints();
-        } catch (error) {
-            console.error("Error deleting endpoint:", error);
         }
-    };
+    } catch (error) {
+        console.error('Error saving endpoint:', error);
+    }
+};
 
-    onMounted(() => {
+const deleteEndpoint = async (endpoint) => {
+    if (!confirm('Are you sure you want to delete this endpoint?')) return;
+
+    try {
+        await fetch(route('api.endpoints.destroy', [endpoint.id]), {
+            method: 'DELETE',
+            headers: requestHeaders,
+        });
         fetchEndpoints();
-        fetchCurrentUser();
-    });
+    } catch (error) {
+        console.error('Error deleting endpoint:', error);
+    }
+};
+
+onMounted(() => {
+    fetchEndpoints();
+    fetchCurrentUser();
+});
 </script>
 
-
 <template>
-    <div >
+    <div>
         <div class="p-4">
-            <button @click="openCreateForm" class="bg-blue-500 text-white px-4 py-2 rounded">+ Add Endpoint</button>
+            <button @click="openCreateForm" class="rounded bg-blue-500 px-4 py-2 text-white">+ Add Endpoint</button>
         </div>
         <div class="p-4">
-            <TailwindPagination
-                :data="endpoints"
-                @pagination-change-page="fetchEndpoints"
-            />
+            <TailwindPagination :data="endpoints" @pagination-change-page="fetchEndpoints" />
         </div>
         <div class="hidden md:block">
             <EndpointsTableDesktop :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
         </div>
 
-        <div class="block md:hidden space-y-4">
+        <div class="block space-y-4 md:hidden">
             <EndpointsTableMobile :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
         </div>
-        
 
         <EndpointForm
             :show="showModal"
@@ -132,7 +124,6 @@
             :current-user="currentUser"
             @close="showModal = false"
             @submit="submitForm"
-        />        
-
+        />
     </div>
 </template>
