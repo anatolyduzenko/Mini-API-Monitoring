@@ -20,7 +20,7 @@ const deleteEndpoint = (endpoint) => {
         <TableCaption>A list of your monitored endpoints.</TableCaption>
         <TableHeader>
             <TableRow>
-                <TableHead class="w-[100px]"> Name </TableHead>
+                <TableHead>Name</TableHead>
                 <TableHead>URL</TableHead>
                 <TableHead>Method</TableHead>
                 <TableHead>Interval</TableHead>
