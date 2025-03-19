@@ -24,7 +24,7 @@ class EndpointsController extends Controller
     {
         $newEndpoint = Endpoint::create($request->validated());
 
-        if(!$newEndpoint) {
+        if (! $newEndpoint) {
             return response()->json(['error' => 'Failed to create endpoint'], 500);
         }
 
@@ -46,7 +46,7 @@ class EndpointsController extends Controller
     {
         $updatedEndpoint = $endpoint->update($request->validated());
 
-        if(!$updatedEndpoint) {
+        if (! $updatedEndpoint) {
             return response()->json(['error' => 'Failed to update endpoint'], 500);
         }
 

@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\EndpointsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('api')->group( function() {
+Route::prefix('api')->group(function () {
 
     Route::get('/endpoints', [EndpointsController::class, 'index'])
         ->middleware(['auth', 'verified'])
@@ -29,5 +29,5 @@ Route::prefix('api')->group( function() {
     Route::get('/user', function (Request $request) {
         return response()->json($request->user());
     })->name('api.user');
-        
+
 });

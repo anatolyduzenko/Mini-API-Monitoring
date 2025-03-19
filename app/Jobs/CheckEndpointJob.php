@@ -16,15 +16,14 @@ use Illuminate\Support\Facades\Log;
 
 class CheckEndpointJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
-
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $endpoint;
 
     /**
      * Create a new job instance.
      */
-    public function __construct( Endpoint $endpoint)
+    public function __construct(Endpoint $endpoint)
     {
         $this->endpoint = $endpoint;
     }
@@ -34,12 +33,13 @@ class CheckEndpointJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $cacheKey = 'api_check_' . $this->endpoint->id;
+        $cacheKey = 'api_check_'.$this->endpoint->id;
         $lastChecked = Cache::get($cacheKey);
         $interval = $this->endpoint->check_interval * 60;
 
         if ($lastChecked && (now()->timestamp - $lastChecked) < $interval) {
             Log::info("Skipping {$this->endpoint->name}, checked recently.");
+
             return;
         }
 
@@ -58,7 +58,7 @@ class CheckEndpointJob implements ShouldQueue
             ]);
 
         } catch (\Exception $e) {
-            Log::error("Failed to check {$this->endpoint->name}: " . $e->getMessage());
+            Log::error("Failed to check {$this->endpoint->name}: ".$e->getMessage());
 
             EndpointLog::create([
                 'endpoint_id' => $this->endpoint->id,

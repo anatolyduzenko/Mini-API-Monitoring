@@ -9,6 +9,6 @@ class EndpointLog extends Model
     protected $fillable = [
         'endpoint_id',
         'status_code',
-        'response_time'
+        'response_time',
     ];
 }

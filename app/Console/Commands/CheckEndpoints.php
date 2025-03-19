@@ -36,6 +36,6 @@ class CheckEndpoints extends Command
                 ->dispatch();
         }
 
-        $this->info("API endpoints batch check dispatched successfully!");
+        $this->info('API endpoints batch check dispatched successfully!');
     }
 }
