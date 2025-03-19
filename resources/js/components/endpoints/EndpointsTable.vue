@@ -10,6 +10,7 @@
 
     const endpoints = ref([]);
     const errors = ref({});
+    const currentUser = ref(null);
     const showModal = ref(false);
     const isEditing = ref(false);
     const selectedEndpoint = ref(null);
@@ -25,6 +26,16 @@
             endpoints.value = await response.json();
         } catch (error) {
             console.error("Error fetching endpoints:", error);
+        }
+    };
+
+    const fetchCurrentUser = async () => {
+        try {
+            const response = await fetch(route("api.user"));
+            currentUser.value = await response.json();
+            console.log(currentUser);
+        } catch (error) {
+            console.error("Error fetching user:", error);
         }
     };
 
@@ -87,7 +98,10 @@
         }
     };
 
-    onMounted(fetchEndpoints);
+    onMounted(() => {
+        fetchEndpoints();
+        fetchCurrentUser();
+    });
 </script>
 
 
@@ -115,6 +129,7 @@
             :show="showModal"
             :endpoint="selectedEndpoint"
             :errors="errors"
+            :current-user="currentUser"
             @close="showModal = false"
             @submit="submitForm"
         />        

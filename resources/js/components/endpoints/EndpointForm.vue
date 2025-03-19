@@ -1,16 +1,25 @@
 <script setup lang="ts">
     import { ref, watch } from "vue";
 
-    const props = defineProps(["show", "endpoint"]);
+    const props = defineProps(["show", "endpoint", "currentUser"]);
     const emit = defineEmits(["close", "submit"]);
 
-    const editableEndpoint = ref({ id: null, name: "", url: "", method: "GET", check_interval: 5 });
+    const editableEndpoint = ref({ 
+        id: null, 
+        name: "", 
+        url: "", 
+        method: "GET", 
+        check_interval: 5, 
+        user_id: props.currentUser ? props.currentUser.id : null
+    });
     const errors = ref({ name: "", url: ""});
 
     watch(
         () => props.endpoint,
         (newValue) => {
-            editableEndpoint.value = newValue ? { ...newValue } : { id: null, name: "", url: "", method: "GET", check_interval: 5 };
+            editableEndpoint.value = newValue 
+            ? { ...newValue, user_id: props.currentUser ? props.currentUser.id : null } 
+            : { id: null, name: "", url: "", method: "GET", check_interval: 5, user_id: props.currentUser ? props.currentUser.id : null };
         },
         { immediate: true }
     );
@@ -43,6 +52,8 @@
 
             <label class="block mb-2">Check Interval (minutes):</label>
             <input v-model="editableEndpoint.check_interval" type="number" class="w-full border p-2 rounded mb-3" />
+
+            <p class="text-sm text-gray-600">Current User: {{ props.currentUser?.name }}</p>
             
             <div class="flex justify-between mt-4">
                 <button @click="emit('close')" class="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>

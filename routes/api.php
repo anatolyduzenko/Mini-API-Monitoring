@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EndpointsController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('api')->group( function() {
@@ -24,5 +25,9 @@ Route::prefix('api')->group( function() {
     Route::put('/endpoints/{endpoint}', [EndpointsController::class, 'update'])
         ->middleware(['auth', 'verified'])
         ->name('api.endpoints.update');
+
+    Route::get('/user', function (Request $request) {
+        return response()->json($request->user());
+    })->name('api.user');
         
 });

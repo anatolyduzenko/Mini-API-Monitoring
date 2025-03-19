@@ -12,11 +12,16 @@ class Endpoint extends Model
         'method',
         'headers',
         'body',
-        'check_interval'
+        'check_interval',
+        'user_id'
     ];
 
     public function logs() {
         return $this->hasMany(EndpointLog::class);
     }
     
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
