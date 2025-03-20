@@ -57,7 +57,6 @@ const submitForm = async (endpoint) => {
         const url = endpoint.id ? route('api.endpoints.update', [endpoint.id]) : route('api.endpoints.store');
 
         const method = endpoint.id ? 'PUT' : 'POST';
-        console.log(requestHeaders);
         const response = await fetch(url, {
             method: method,
             headers: requestHeaders,

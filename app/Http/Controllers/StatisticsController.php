@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Endpoint;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
@@ -10,8 +11,10 @@ class StatisticsController extends Controller
     /**
      * Get API Uptime Statistics.
      */
-    public function getUptime()
+    public function getUptime(Request $request)
     {
+        $perPage = $request->query('per_page', 8);
+
         $uptimeStatistics = Endpoint::withCount(['logs as total_checks' => function ($query) {
             $query->select(DB::raw('count(*)'));
         }, 'logs as successful_checks' => function ($query) {
@@ -19,8 +22,8 @@ class StatisticsController extends Controller
                 ->where('status_code', '<', 400)
                 ->select(DB::raw('count(*)'));
         }])
-            ->get()
-            ->map(function ($endpoint) {
+            ->paginate($perPage)
+            ->through(function ($endpoint) {
                 return [
                     'name' => $endpoint->name,
                     'uptime' => $endpoint->total_checks > 0
@@ -52,7 +55,7 @@ class StatisticsController extends Controller
             ->orderBy(
                 'endpoint_logs.created_at',
                 'desc')
-            ->limit(10)
+            ->limit(9)
             ->get();
 
         return response()->json($recentLogs);
