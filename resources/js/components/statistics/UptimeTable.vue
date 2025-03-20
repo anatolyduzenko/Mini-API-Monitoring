@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import UptimeRow from '@/components/statistics/UptimeRow.vue';
 import { Table, TableBody, TableCaption, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { onMounted, ref } from 'vue';
@@ -19,7 +19,7 @@ onMounted(fetchUptimeStats);
 </script>
 
 <template>
-    <Table class="min-w-full border border-gray-200 bg-white">
+    <Table class="caption-top border border-gray-200 bg-white">
         <TableCaption>API Uptime Statistics.</TableCaption>
         <TableHeader>
             <TableRow>

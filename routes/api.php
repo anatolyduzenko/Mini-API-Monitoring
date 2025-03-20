@@ -27,8 +27,13 @@ Route::prefix('api')->group(function () {
     })->name('api.user');
 
     Route::prefix('statistics')->group(function () {
+
         Route::get('/uptime', [StatisticsController::class, 'getUptime'])
             ->name('api.statistics.uptime');
+
+        Route::get('/recent-logs', [StatisticsController::class, 'getRecentLogs'])
+            ->name('api.statistics.recent');
+
     });
 
 })->middleware(['auth', 'verified']);

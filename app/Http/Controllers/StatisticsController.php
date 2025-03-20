@@ -31,4 +31,30 @@ class StatisticsController extends Controller
 
         return response()->json($uptimeStatistics);
     }
+
+    /**
+     * Get Recent API logs
+     */
+    public function getRecentLogs()
+    {
+        $recentLogs = DB::table('endpoint_logs')
+            ->join(
+                'endpoints',
+                'endpoint_logs.endpoint_id',
+                '=',
+                'endpoints.id'
+            )
+            ->select(
+                'endpoints.name',
+                'endpoint_logs.status_code',
+                'endpoint_logs.response_time',
+                'endpoint_logs.created_at')
+            ->orderBy(
+                'endpoint_logs.created_at',
+                'desc')
+            ->limit(10)
+            ->get();
+
+        return response()->json($recentLogs);
+    }
 }
