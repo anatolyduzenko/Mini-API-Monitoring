@@ -31,6 +31,12 @@ Route::prefix('api')->group(function () {
         Route::get('/uptime', [StatisticsController::class, 'getUptime'])
             ->name('api.statistics.uptime');
 
+        Route::get('/uptime-graph', [StatisticsController::class, 'getUptimeGraph'])
+            ->name('api.statistics.uptimeGraph');
+
+        Route::get('/response-time', [StatisticsController::class, 'getResponseTime'])
+            ->name('api.statistics.responseTime');
+
         Route::get('/recent-logs', [StatisticsController::class, 'getRecentLogs'])
             ->name('api.statistics.recent');
 

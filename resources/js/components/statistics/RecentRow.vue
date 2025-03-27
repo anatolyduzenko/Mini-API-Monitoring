@@ -6,7 +6,7 @@ defineProps(['endpoint']);
 
 <template>
     <TableRow :key="endpoint.id">
-        <TableCell class="p-2 font-medium">
+        <TableCell class="p-2 text-left">
             {{ endpoint.name }}
         </TableCell>
         <TableCell class="p-2">{{ endpoint.status_code }}</TableCell>

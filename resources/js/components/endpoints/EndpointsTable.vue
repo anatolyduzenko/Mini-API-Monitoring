@@ -33,7 +33,6 @@ const fetchCurrentUser = async () => {
     try {
         const response = await fetch(route('api.user'));
         currentUser.value = await response.json();
-        console.log(currentUser);
     } catch (error) {
         console.error('Error fetching user:', error);
     }

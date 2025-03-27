@@ -28,7 +28,7 @@ onMounted(fetchUptimeStats);
 
 <template>
     <div>
-        <Table class="caption-top border border-gray-200 bg-white">
+        <Table class="caption-top border">
             <TableCaption>API Uptime Statistics.</TableCaption>
             <TableHeader>
                 <TableRow>

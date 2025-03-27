@@ -19,7 +19,7 @@ onMounted(fetchRecentLogs);
 </script>
 
 <template>
-    <Table class="caption-top border border-gray-200 bg-white">
+    <Table class="caption-top">
         <TableCaption>Most recent API logs.</TableCaption>
         <TableHeader>
             <TableRow>
