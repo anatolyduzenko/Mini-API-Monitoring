@@ -104,15 +104,17 @@ onMounted(() => {
         <div class="p-4">
             <button @click="openCreateForm" class="rounded bg-blue-500 px-4 py-2 text-white">+ Add Endpoint</button>
         </div>
-        <div class="p-4">
-            <TailwindPagination :data="endpoints" @pagination-change-page="fetchEndpoints" />
-        </div>
+        
         <div class="hidden md:block">
             <EndpointsTableDesktop :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
         </div>
 
         <div class="block space-y-4 md:hidden">
             <EndpointsTableMobile :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
+        </div>
+
+        <div class="p-4">
+            <TailwindPagination :data="endpoints" @pagination-change-page="fetchEndpoints" />
         </div>
 
         <EndpointForm

@@ -11,4 +11,9 @@ class EndpointLog extends Model
         'status_code',
         'response_time',
     ];
+
+    public function endpoint()
+    {
+        return $this->belongsTo(Endpoint::class);
+    }
 }

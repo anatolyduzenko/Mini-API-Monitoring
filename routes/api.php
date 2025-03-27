@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\EndpointsController;
-use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\Api\LogsController;
+use App\Http\Controllers\Api\StatisticsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,9 @@ Route::prefix('api')->group(function () {
 
     Route::put('/endpoints/{endpoint}', [EndpointsController::class, 'update'])
         ->name('api.endpoints.update');
+
+    Route::get('/logs', LogsController::class)
+        ->name('api.logs.index');
 
     Route::get('/user', function (Request $request) {
         return response()->json($request->user());

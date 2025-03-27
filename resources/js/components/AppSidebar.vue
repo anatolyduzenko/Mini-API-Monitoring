@@ -5,19 +5,24 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { Folder, LayoutGrid } from 'lucide-vue-next';
+import { Folder, MonitorCheck, SquareActivity, Logs } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: '/dashboard',
-        icon: LayoutGrid,
+        icon: SquareActivity,
     },
     {
         title: 'Endpoints',
         href: '/endpoints',
-        icon: LayoutGrid,
+        icon: MonitorCheck,
+    },
+    {
+        title: 'Logs',
+        href: '/logs',
+        icon: Logs,
     },
 ];
 

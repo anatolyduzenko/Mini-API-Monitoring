@@ -16,7 +16,7 @@ const deleteEndpoint = (endpoint) => {
 </script>
 
 <template>
-    <div class="p-5">
+    <div class="px-5">
         <Table class="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-200">
             <TableCaption class="text-gray-700 dark:text-gray-300">A list of your monitored endpoints.</TableCaption>
             <TableHeader class="bg-gray-100 dark:bg-gray-800">
@@ -24,7 +24,7 @@ const deleteEndpoint = (endpoint) => {
                     <TableHead class="py-2 px-4 text-left text-gray-800 dark:text-gray-300">Name</TableHead>
                     <TableHead class="py-2 px-4 text-left text-gray-800 dark:text-gray-300">URL</TableHead>
                     <TableHead class="py-2 px-4 text-left text-gray-800 dark:text-gray-300">Method</TableHead>
-                    <TableHead class="py-2 px-4 text-left text-gray-800 dark:text-gray-300">Interval</TableHead>
+                    <TableHead class="py-2 px-4 text-left text-gray-800 dark:text-gray-300">Interval(min)</TableHead>
                     <TableHead class="py-2 px-4 text-right text-gray-800 dark:text-gray-300">Actions</TableHead>
                 </TableRow>
             </TableHeader>
