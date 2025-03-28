@@ -3,12 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Endpoint;
+use App\Services\LogsService;
+use App\Services\StatisticsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
+
+    protected $statisticsService;
+
+    protected $logsService;
+
+    public function __construct(StatisticsService $statisticsService, LogsService $logsService) {
+        $this->statisticsService = $statisticsService;
+        $this->logsService = $logsService;
+    }
+
     /**
      * Get API Uptime Statistics.
      */
@@ -16,22 +27,7 @@ class StatisticsController extends Controller
     {
         $perPage = $request->query('per_page', 8);
 
-        $uptimeStatistics = Endpoint::withCount(['logs as total_checks' => function ($query) {
-            $query->select(DB::raw('count(*)'));
-        }, 'logs as successful_checks' => function ($query) {
-            $query->where('status_code', '>=', 200)
-                ->where('status_code', '<', 400)
-                ->select(DB::raw('count(*)'));
-        }])
-            ->paginate($perPage)
-            ->through(function ($endpoint) {
-                return [
-                    'name' => $endpoint->name,
-                    'uptime' => $endpoint->total_checks > 0
-                        ? round(($endpoint->successful_checks / $endpoint->total_checks) * 100, 2)
-                        : 0,
-                ];
-            });
+        $uptimeStatistics = $this->statisticsService->reportUptime($perPage);
 
         return response()->json($uptimeStatistics);
     }
@@ -41,48 +37,21 @@ class StatisticsController extends Controller
      */
     public function getRecentLogs()
     {
-        $recentLogs = DB::table('endpoint_logs')
-            ->join(
-                'endpoints',
-                'endpoint_logs.endpoint_id',
-                '=',
-                'endpoints.id'
-            )
-            ->select(
-                'endpoints.name',
-                'endpoint_logs.status_code',
-                'endpoint_logs.response_time',
-                'endpoint_logs.created_at')
-            ->orderBy(
-                'endpoint_logs.created_at',
-                'desc')
-            ->limit(9)
-            ->get();
+        $recentLogs = $this->logsService->recentLogs();
 
         return response()->json($recentLogs);
     }
 
     /**
-     * Get API Uptime Statistics Over Time.
-     * Use one week as period
+     * Get API Uptime Statistics Over Time. Uses one week as period.
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function getUptimeGraph(Request $request)
     {
         $days = $request->query('days', 7);
 
-        $trendData = DB::table('endpoint_logs')
-            ->select(
-                DB::raw('DATE(endpoint_logs.created_at) as date'),
-                'endpoints.name',
-                'endpoint_id',
-                DB::raw('SUM(CASE WHEN status_code >= 200 AND status_code < 400 THEN 1 ELSE 0 END) as successful_checks'),
-                DB::raw('COUNT(*) as total_checks')
-            )
-            ->leftJoin('endpoints', 'endpoints.id', '=', 'endpoint_id')
-            ->where('endpoint_logs.created_at', '>=', now()->subDays($days))
-            ->groupBy('date', 'endpoint_id', 'name')
-            ->orderBy('date', 'asc')
-            ->get();
+        $trendData = $this->statisticsService->uptimeTrendData($days);
 
         $graphData = $trendData->groupBy('date')
             ->map(function ($entries, $date) {
@@ -106,23 +75,14 @@ class StatisticsController extends Controller
 
     /**
      * Get Average API Response Time.
+     * @param \Illuminate\Http\Request $request
+     * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function getResponseTime(Request $request)
     {
         $days = $request->query('days', 7);
 
-        $responseTime = DB::table('endpoint_logs')
-            ->select(
-                DB::raw('DATE(endpoint_logs.created_at) as date'),
-                'endpoints.name',
-                'endpoint_id',
-                DB::raw('AVG(response_time) as response_time'),
-            )
-            ->leftJoin('endpoints', 'endpoints.id', '=', 'endpoint_id')
-            ->where('endpoint_logs.created_at', '>=', now()->subDays($days))
-            ->groupBy('date', 'endpoint_id', 'name')
-            ->orderBy('date', 'asc')
-            ->get();
+        $responseTime = $this->logsService->responseTime($days);
 
         $graphData = $responseTime->groupBy('date')
             ->map(function ($entries, $date) {
