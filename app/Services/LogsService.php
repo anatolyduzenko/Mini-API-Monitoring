@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\DB;
 
 class LogsService
 {
-    
     /**
      * Returns Recent API logs
+     *
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
     public function recentLogs()
@@ -34,10 +34,9 @@ class LogsService
         return $recentLogs;
     }
 
-
     /**
      * Prepares data for response time chart
-     * @param int $days
+     *
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
     public function responseTime(int $days)
@@ -54,7 +53,7 @@ class LogsService
             ->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
-        
+
         return $responseTime;
     }
 }

@@ -6,16 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Services\LogsService;
 use App\Services\StatisticsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class StatisticsController extends Controller
 {
-
     protected $statisticsService;
 
     protected $logsService;
 
-    public function __construct(StatisticsService $statisticsService, LogsService $logsService) {
+    public function __construct(StatisticsService $statisticsService, LogsService $logsService)
+    {
         $this->statisticsService = $statisticsService;
         $this->logsService = $logsService;
     }
@@ -44,7 +43,7 @@ class StatisticsController extends Controller
 
     /**
      * Get API Uptime Statistics Over Time. Uses one week as period.
-     * @param \Illuminate\Http\Request $request
+     *
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function getUptimeGraph(Request $request)
@@ -75,7 +74,7 @@ class StatisticsController extends Controller
 
     /**
      * Get Average API Response Time.
-     * @param \Illuminate\Http\Request $request
+     *
      * @return mixed|\Illuminate\Http\JsonResponse
      */
     public function getResponseTime(Request $request)

@@ -7,21 +7,20 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticsService
 {
-
     /**
      * Prepares data for Uptime Report
-     * @param int $perPage
+     *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function reportUptime(int $perPage)
     {
         $uptimeStatistics = Endpoint::withCount(['logs as total_checks' => function ($query) {
-                $query->select(DB::raw('count(*)'));
-            }, 'logs as successful_checks' => function ($query) {
-                $query->where('status_code', '>=', 200)
-                    ->where('status_code', '<', 400)
-                    ->select(DB::raw('count(*)'));
-            }])
+            $query->select(DB::raw('count(*)'));
+        }, 'logs as successful_checks' => function ($query) {
+            $query->where('status_code', '>=', 200)
+                ->where('status_code', '<', 400)
+                ->select(DB::raw('count(*)'));
+        }])
             ->paginate($perPage)
             ->through(function ($endpoint) {
                 return [
@@ -36,11 +35,11 @@ class StatisticsService
     }
 
     /**
-     * Prepares data for uptime Chart  
-     * @param int $days
+     * Prepares data for uptime Chart
+     *
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
-    public function uptimeTrendData(int $days) 
+    public function uptimeTrendData(int $days)
     {
         $trendData = DB::table('endpoint_logs')
             ->select(
@@ -55,7 +54,7 @@ class StatisticsService
             ->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
-        
+
         return $trendData;
     }
 }
