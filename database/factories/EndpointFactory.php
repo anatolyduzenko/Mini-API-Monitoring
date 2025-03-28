@@ -20,8 +20,8 @@ class EndpointFactory extends Factory
             'name' => fake()->name(),
             'url' => fake()->unique()->url(),
             'method' => fake()->randomElement(['GET', 'HEAD', 'FETCH']),
-            'headers' => '',
-            'body' => '',
+            'headers' => null,
+            'body' => null,
             'check_interval' => 5,
             'created_at' => now(),
         ];

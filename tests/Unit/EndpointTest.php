@@ -6,13 +6,17 @@ use App\Models\Endpoint;
 use App\Models\EndpointLog;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class EndpointTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     public function test_user_can_create_an_endpoint()
     {
         $user = User::factory()->create();
@@ -31,7 +35,6 @@ class EndpointTest extends TestCase
         $this->assertInstanceOf(Endpoint::class, $endpoint);
     }
 
-    /** @test */
     public function test_that_endpoint_belongs_to_a_user()
     {
         $user = User::factory()->create();
@@ -41,10 +44,10 @@ class EndpointTest extends TestCase
         $this->assertEquals($user->id, $endpoint->user->id);
     }
 
-    /** @test */
     public function test_that_endpoint_has_many_logs()
     {
-        $endpoint = Endpoint::factory()->create();
+        $user = User::factory()->create();
+        $endpoint = Endpoint::factory()->create(['user_id' => $user->id]);
         $log1 = EndpointLog::factory()->create(['endpoint_id' => $endpoint->id]);
         $log2 = EndpointLog::factory()->create(['endpoint_id' => $endpoint->id]);
 
