@@ -34,6 +34,7 @@ onMounted(fetchUptimeStats);
                 <TableRow>
                     <TableHead class="text-center">Endpoint Name</TableHead>
                     <TableHead class="text-center">Uptime (%)</TableHead>
+                    <TableHead class="text-center">Actions</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>

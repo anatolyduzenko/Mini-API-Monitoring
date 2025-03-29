@@ -48,9 +48,10 @@ class StatisticsController extends Controller
      */
     public function getUptimeGraph(Request $request)
     {
-        $days = $request->query('days', 7);
+        $days = $request->query('days', 10);
+        $endpointId = $request->query('endpoint_id');
 
-        $trendData = $this->statisticsService->uptimeTrendData($days);
+        $trendData = $this->statisticsService->uptimeTrendData($days, $endpointId);
 
         $graphData = $trendData->groupBy('date')
             ->map(function ($entries, $date) {

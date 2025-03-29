@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TableCell, TableRow } from '@/components/ui/table';
+import DetailedChart from '@/components/statistics/DetailedChart.vue';
 
 defineProps(['endpoint']);
 </script>
@@ -10,5 +11,8 @@ defineProps(['endpoint']);
             {{ endpoint.name }}
         </TableCell>
         <TableCell class="p-2">{{ endpoint.uptime }}</TableCell>
+        <TableCell class="p-2">
+            <DetailedChart :endpoint="endpoint" />
+        </TableCell>
     </TableRow>
 </template>

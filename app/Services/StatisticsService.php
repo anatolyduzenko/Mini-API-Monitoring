@@ -24,6 +24,7 @@ class StatisticsService
             ->paginate($perPage)
             ->through(function ($endpoint) {
                 return [
+                    'id' => $endpoint->id,
                     'name' => $endpoint->name,
                     'uptime' => $endpoint->total_checks > 0
                         ? round(($endpoint->successful_checks / $endpoint->total_checks) * 100, 2)
@@ -39,9 +40,9 @@ class StatisticsService
      *
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
-    public function uptimeTrendData(int $days)
+    public function uptimeTrendData(int $days, $endpointId = null)
     {
-        $trendData = DB::table('endpoint_logs')
+        $query = DB::table('endpoint_logs')
             ->select(
                 DB::raw('DATE(endpoint_logs.created_at) as date'),
                 'endpoints.name',
@@ -50,8 +51,13 @@ class StatisticsService
                 DB::raw('COUNT(*) as total_checks')
             )
             ->leftJoin('endpoints', 'endpoints.id', '=', 'endpoint_id')
-            ->where('endpoint_logs.created_at', '>=', now()->subDays($days))
-            ->groupBy('date', 'endpoint_id', 'name')
+            ->where('endpoint_logs.created_at', '>=', now()->subDays($days));
+        
+        if ($endpointId) {
+            $query->where('endpoint_id', '=', $endpointId);
+        }
+
+        $trendData = $query->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
 
