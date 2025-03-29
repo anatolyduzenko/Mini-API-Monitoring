@@ -13,10 +13,20 @@ class LogsController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return response()->json(EndpointLog::with(['endpoint:id,name'])
-            ->orderBy(
-                'endpoint_logs.created_at',
-                'desc')
-            ->paginate(20));
+        $perPage = $request->query('per_page');
+        $endpointId = $request->query('endpoint_id');
+
+        $query = EndpointLog::with(['endpoint:id,name']);
+
+        if ($endpointId) {
+            $query->where('endpoint_id', '=', $endpointId);
+        }
+
+        $logsData = $query->orderBy(
+            'endpoint_logs.created_at',
+            'desc')
+            ->paginate($perPage);
+
+        return response()->json($logsData);
     }
 }
