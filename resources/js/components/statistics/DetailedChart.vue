@@ -9,17 +9,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { ref, onMounted, reactive } from "vue";
+import { ref, nextTick, watch } from "vue";
 import { route } from "ziggy-js";
 import { LineChart } from '@/components/ui/chart-line'
-import EndpointForm from '../endpoints/EndpointForm.vue';
+import { EndpointStatRecord } from '@/types/app/endpointstatrecord';
 
-const props = defineProps(['endpoint']);
+const props = defineProps<{
+    endpoint: EndpointStatRecord
+}>();
 
 const uptimeTrends = ref([]);
 const labels = ref([]);
+const isOpen = defineModel<boolean>('open', { default: false });
 
 const fetchUptimeTrend = async (endpoint) => {
     try {
@@ -38,24 +39,29 @@ const fetchUptimeTrend = async (endpoint) => {
     }
 };
 
+watch (
+  () => props.endpoint,
+  (newVal) => {
+    if (newVal?.id) {
+      fetchUptimeTrend(newVal.id)
+    }
+  },
+  { immediate: true }
+)
+
 </script>
 
 <template>
-  <Dialog @update:open="fetchUptimeTrend(endpoint.id)">
-    <DialogTrigger as-child>
-        <Button variant="outline">
-        Detailed
-        </Button>
-    </DialogTrigger>
+  <Dialog v-model:open="isOpen">
     <DialogContent class="sm:max-w-[75%]">
       <DialogHeader>
         <DialogTitle>Detailed View</DialogTitle>
         <DialogDescription>
-          -----Description goes here
+            Uptime chart for {{ endpoint.name }}
         </DialogDescription>
       </DialogHeader>
       <div class="grid gap-4 py-4">
-        <LineChart v-if="labels.length"
+        <LineChart v-if="endpoint?.id && labels.length"
             :data="uptimeTrends"
             :categories="[...labels]"
             index="date"
@@ -67,7 +73,7 @@ const fetchUptimeTrend = async (endpoint) => {
         />
       </div>
       <DialogFooter>
-        <Button type="submit">
+        <Button @click="isOpen = false">
           Close
         </Button>
       </DialogFooter>

@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { TableCell, TableRow } from '@/components/ui/table';
-import DetailedChart from '@/components/statistics/DetailedChart.vue';
+import { EndpointStatRecord } from '@/types/app/endpointstatrecord';
 
-defineProps(['endpoint']);
+const props = defineProps<{
+    endpoint: EndpointStatRecord
+}>();
+
 </script>
 
 <template>
     <TableRow :key="endpoint.id">
-        <TableCell class="p-2 font-medium">
+        <TableCell class="p-2 font-medium text-left">
             {{ endpoint.name }}
         </TableCell>
         <TableCell class="p-2">{{ endpoint.uptime }}</TableCell>
-        <TableCell class="p-2">
-            <DetailedChart :endpoint="endpoint" />
-        </TableCell>
     </TableRow>
 </template>
