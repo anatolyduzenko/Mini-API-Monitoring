@@ -42,7 +42,7 @@ const fetchLogs = async (page = 1, newPerPage = 15, endpointId = null, statusCod
 
 const fetchEndpoints = async () => {
     try {
-        let page = 1;
+        const page = 1;
         let hasMore = true;
         while (hasMore) {
             const response = await fetch(route('api.endpoints.index') + `?page=${page}`);
@@ -67,7 +67,7 @@ const fetchStatusCodes = async () => {
 
 watch(
     [currentPage, perPage, endpointId, statusCode],
-    ([newPage, newPerPage, newEndpointId, newStatusCode], [_oldPage, oldPerPage, oldEndpointId, oldStatusCode]) => {
+    ([newPage, newPerPage, newEndpointId, newStatusCode], [_, oldPerPage, oldEndpointId, oldStatusCode]) => {
         if (newPerPage !== oldPerPage || newEndpointId != oldEndpointId || newStatusCode != oldStatusCode) {
             newPage = 1;
         }
