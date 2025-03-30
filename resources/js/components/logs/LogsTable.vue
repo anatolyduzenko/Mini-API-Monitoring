@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import type { Endpoint } from '@/types/app/endpoint';
+import type { LogRecord } from '@/types/app/logrecord';
 import { onMounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
 import { columns } from './columns';
 
 import LogsDataTable from '@/components/logs/LogsDataTable.vue';
 
-const logs = ref([]);
+const logs = ref<LogRecord[]>([]);
 const loading = ref(false);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const perPage = ref(15);
 const endpointId = ref(null);
-const endpoints = ref({});
+const endpoints = ref<Endpoint[]>([]);
 const statusCode = ref(null);
 const statusCodes = ref({});
 
