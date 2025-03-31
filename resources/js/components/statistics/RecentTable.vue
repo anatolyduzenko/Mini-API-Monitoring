@@ -21,8 +21,8 @@ onMounted(fetchRecentLogs);
 <template>
     <div class="p-5">
         <h3 class="text-md mb-4 font-bold">Most Recent Logs</h3>
-        <Table  class="caption-top border">
-            <TableCaption class="pt-0 pb-4">Most recent API logs.</TableCaption>
+        <Table class="caption-top border">
+            <TableCaption class="pb-4 pt-0">Most recent API logs.</TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead class="text-left">Endpoint Name</TableHead>

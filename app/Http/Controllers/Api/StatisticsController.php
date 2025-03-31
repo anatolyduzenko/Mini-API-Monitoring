@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\SplitTypes;
 use App\Http\Controllers\Controller;
 use App\Services\LogsService;
 use App\Services\StatisticsService;
@@ -49,9 +50,10 @@ class StatisticsController extends Controller
     public function getUptimeGraph(Request $request)
     {
         $days = $request->query('days', 10);
+        $splitType = $request->enum('split_type', SplitTypes::class);
         $endpointId = $request->query('endpoint_id');
 
-        $trendData = $this->statisticsService->uptimeTrendData($days, $endpointId);
+        $trendData = $this->statisticsService->uptimeTrendData($days, $splitType, $endpointId);
 
         $graphData = $trendData->groupBy('date')
             ->map(function ($entries, $date) {

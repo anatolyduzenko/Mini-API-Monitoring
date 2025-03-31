@@ -2,8 +2,11 @@
 
 namespace App\Enums;
 
+use App\Traits\EnumToArray;
+
 enum StatusCode: int
 {
+    use EnumToArray;
     case OK = 200;
     case CREATED = 201;
     case NO_CONTENT = 204;
@@ -14,7 +17,7 @@ enum StatusCode: int
     case INTERNAL_SERVER_ERROR = 500;
     case SERVICE_UNAVAILABLE = 503;
 
-    public function message(): string
+    public function label(): string
     {
         return match ($this) {
             self::OK => 'OK',
@@ -27,10 +30,5 @@ enum StatusCode: int
             self::INTERNAL_SERVER_ERROR => 'Internal Server Error',
             self::SERVICE_UNAVAILABLE => 'Service Unavailable',
         };
-    }
-
-    public static function fromCode(int $code): ?self
-    {
-        return self::tryFrom($code);
     }
 }
