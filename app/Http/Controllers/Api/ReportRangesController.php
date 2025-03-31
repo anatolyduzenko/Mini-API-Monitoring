@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\StatusCode;
+use App\Enums\ReportRange;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class StatusCodesController extends Controller
+class ReportRangesController extends Controller
 {
     /**
      * Handle the incoming request.
      */
     public function __invoke(Request $request)
     {
-        return response()->json(StatusCode::asLabels());
+        return response()->json(ReportRange::asLabels());
     }
 }

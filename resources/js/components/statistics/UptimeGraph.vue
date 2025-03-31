@@ -8,7 +8,7 @@ const labels = reactive([]);
 
 const fetchUptimeTrend = async () => {
     try {
-        const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7');
+        const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7&split_type=daily');
         const data = await response.json();
         data.labels.forEach((entry) => {
             labels.push(entry);

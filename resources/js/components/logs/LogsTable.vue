@@ -105,7 +105,7 @@ onMounted(() => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem v-for="code in statusCodes" :key="code" :value="code"> {{ code }} </SelectItem>
+                                <SelectItem v-for="code in statusCodes" :key="code.id" :value="code.id"> {{ code.id }} | {{ code.name }} </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

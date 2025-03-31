@@ -16,7 +16,7 @@ const fetchResponseTime = async () => {
         data.graphData.forEach((entry) => {
             responseTime.value.push(entry);
         });
-        console.log(responseTime, labels);
+        // console.log(responseTime, labels);
     } catch (error) {
         console.error('Error fetching uptime trend:', error);
     }

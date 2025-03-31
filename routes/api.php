@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\EndpointsController;
 use App\Http\Controllers\Api\LogsController;
+use App\Http\Controllers\Api\ReportRangesController;
+use App\Http\Controllers\Api\SplitTypesController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\StatusCodesController;
 use Illuminate\Http\Request;
@@ -29,6 +31,12 @@ Route::prefix('api')->group(function () {
 
     Route::get('/status-codes', StatusCodesController::class)
         ->name('api.statusCodes.index');
+
+    Route::get('/report-ranges', ReportRangesController::class)
+        ->name('api.reportRanges.index');
+
+    Route::get('/split-types', SplitTypesController::class)
+        ->name('api.splitTypes.index');
 
     Route::get('/user', function (Request $request) {
         return response()->json($request->user());
