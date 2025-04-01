@@ -5,9 +5,11 @@ import { BarChart } from '@/components/ui/chart-bar';
 import { LineChart } from '@/components/ui/chart-line';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
+import { useChartColors } from '@/composables/useChartColors';
 import { EndpointStatRecord } from '@/types/app/endpointstatrecord';
 import { onMounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
+const { getRandomHSLColors } = useChartColors();
 
 const props = withDefaults(
     defineProps<{
@@ -45,6 +47,7 @@ const chartTypes = [
     },
 ];
 const splitTypes = ref({});
+const colors = ref<string[]>([]);
 
 const fetchReportRanges = async () => {
     try {
@@ -81,6 +84,7 @@ const fetchUptimeTrend = async (endpoint, days = 365, split = 'daily') => {
         data.graphData.forEach((entry) => {
             uptimeTrends.value.push(entry);
         });
+        colors.value = getRandomHSLColors(labels.value.length);
         progress.value = 100;
         clearTimeout(timer);
         loading.value = false;
@@ -153,6 +157,7 @@ onMounted(() => {
                         :data="uptimeTrends"
                         :categories="[...labels]"
                         index="date"
+                        :colors="colors"
                         :y-formatter="
                             (tick, i) => {
                                 return typeof tick === 'number' ? `${new Intl.NumberFormat('us').format(tick).toString()}%` : '';
@@ -164,6 +169,7 @@ onMounted(() => {
                         :data="uptimeTrends"
                         :categories="[...labels]"
                         index="date"
+                        :colors="colors"
                         :y-formatter="
                             (tick, i) => {
                                 return typeof tick === 'number' ? `${new Intl.NumberFormat('us').format(tick).toString()}%` : '';
@@ -175,6 +181,7 @@ onMounted(() => {
                         :data="uptimeTrends"
                         :categories="[...labels]"
                         index="date"
+                        :colors="colors"
                         :y-formatter="
                             (tick, i) => {
                                 return typeof tick === 'number' ? `${new Intl.NumberFormat('us').format(tick).toString()}%` : '';

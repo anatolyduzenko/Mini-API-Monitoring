@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { LineChart } from '@/components/ui/chart-line';
+import { useChartColors } from '@/composables/useChartColors';
 import { onMounted, reactive, ref } from 'vue';
 import { route } from 'ziggy-js';
 
 const uptimeTrends = ref([]);
 const labels = reactive([]);
+const colors = ref<string[]>([]);
+const { getRandomHSLColors } = useChartColors();
 
 const fetchUptimeTrend = async () => {
     try {
@@ -16,6 +19,7 @@ const fetchUptimeTrend = async () => {
         data.graphData.forEach((entry) => {
             uptimeTrends.value.push(entry);
         });
+        colors.value = getRandomHSLColors(labels.length);
     } catch (error) {
         console.error('Error fetching uptime trend:', error);
     }
@@ -34,6 +38,7 @@ onMounted(() => {
             :data="uptimeTrends"
             :categories="[...labels]"
             index="date"
+            :colors="colors"
             :y-formatter="
                 (tick, i) => {
                     return typeof tick === 'number' ? `${new Intl.NumberFormat('us').format(tick).toString()}%` : '';
