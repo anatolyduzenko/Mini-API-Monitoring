@@ -3,7 +3,7 @@ import { AreaChart } from '@/components/ui/chart-area';
 import { useChartColors } from '@/composables/useChartColors';
 import { onMounted, ref } from 'vue';
 import { route } from 'ziggy-js';
-const { getRandomHSLColors } = useChartColors();
+const { chartColors, getRandomHSLColors } = useChartColors();
 
 const responseTime = ref<Record<string, any>[]>([]);
 const labels = ref<string[]>([]);
@@ -19,7 +19,9 @@ const fetchResponseTime = async () => {
         data.graphData.forEach((entry) => {
             responseTime.value.push(entry);
         });
-        colors.value = getRandomHSLColors(labels.value.length);
+        if (chartColors.value === 'random') {
+            colors.value = getRandomHSLColors(labels.value.length);
+        }
     } catch (error) {
         console.error('Error fetching uptime trend:', error);
     }

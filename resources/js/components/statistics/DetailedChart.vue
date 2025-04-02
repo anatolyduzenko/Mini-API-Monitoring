@@ -9,7 +9,7 @@ import { useChartColors } from '@/composables/useChartColors';
 import { EndpointStatRecord } from '@/types/app/endpointstatrecord';
 import { onMounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
-const { getRandomHSLColors } = useChartColors();
+const { chartColors, getRandomHSLColors } = useChartColors();
 
 const props = withDefaults(
     defineProps<{
@@ -84,7 +84,9 @@ const fetchUptimeTrend = async (endpoint: number, days = 365, split = 'daily') =
         data.graphData.forEach((entry) => {
             uptimeTrends.value.push(entry);
         });
-        colors.value = getRandomHSLColors(labels.value.length);
+        if (chartColors.value === 'random') {
+            colors.value = getRandomHSLColors(labels.value.length);
+        }
         progress.value = 100;
         clearTimeout(timer);
         loading.value = false;

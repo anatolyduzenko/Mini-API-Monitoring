@@ -7,7 +7,7 @@ import { route } from 'ziggy-js';
 const uptimeTrends = ref<Record<string, any>[]>([]);
 const labels = reactive<string[]>([]);
 const colors = ref<string[]>([]);
-const { getRandomHSLColors } = useChartColors();
+const { chartColors, getRandomHSLColors } = useChartColors();
 
 const fetchUptimeTrend = async () => {
     try {
@@ -19,7 +19,10 @@ const fetchUptimeTrend = async () => {
         data.graphData.forEach((entry) => {
             uptimeTrends.value.push(entry);
         });
-        colors.value = getRandomHSLColors(labels.length);
+        console.log(chartColors);
+        if (chartColors.value === 'random') {
+            colors.value = getRandomHSLColors(labels.length);
+        }
     } catch (error) {
         console.error('Error fetching uptime trend:', error);
     }
