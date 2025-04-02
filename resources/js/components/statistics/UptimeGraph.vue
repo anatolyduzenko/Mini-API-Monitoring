@@ -4,8 +4,8 @@ import { useChartColors } from '@/composables/useChartColors';
 import { onMounted, reactive, ref } from 'vue';
 import { route } from 'ziggy-js';
 
-const uptimeTrends = ref([]);
-const labels = reactive([]);
+const uptimeTrends = ref<Record<string, any>[]>([]);
+const labels = reactive<string[]>([]);
 const colors = ref<string[]>([]);
 const { getRandomHSLColors } = useChartColors();
 
@@ -13,7 +13,7 @@ const fetchUptimeTrend = async () => {
     try {
         const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7&split_type=daily');
         const data = await response.json();
-        data.labels.forEach((entry) => {
+        data.labels.forEach((entry: string) => {
             labels.push(entry);
         });
         data.graphData.forEach((entry) => {

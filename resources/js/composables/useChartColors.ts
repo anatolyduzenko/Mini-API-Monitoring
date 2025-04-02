@@ -4,7 +4,7 @@ export function useChartColors() {
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
 
-    function getRandomHSLColors(count, hueRange = [0, 360], saturation = 70, lightness = 50) {
+    function getRandomHSLColors(count: number, hueRange = [0, 360], saturation = 70, lightness = 50) {
         return Array.from({ length: count }, () => getRandomHSLColor(hueRange, saturation, lightness));
     }
 

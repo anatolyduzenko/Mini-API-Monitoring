@@ -23,10 +23,10 @@ const props = withDefaults(
     },
 );
 
-const uptimeTrends = ref([]);
-const labels = ref([]);
+const uptimeTrends = ref<Record<string, any>[]>([]);
+const labels = ref<string[]>([]);
 const isOpen = defineModel<boolean>('open', { default: false });
-const reportRanges = ref({});
+const reportRanges = ref<Record<string, any>>({});
 const localReportDays = ref(props.reportDays);
 const localSplitType = ref(props.splitType);
 const progress = ref(10);
@@ -46,7 +46,7 @@ const chartTypes = [
         name: 'Line',
     },
 ];
-const splitTypes = ref({});
+const splitTypes = ref<Record<string, any>>({});
 const colors = ref<string[]>([]);
 
 const fetchReportRanges = async () => {
@@ -69,7 +69,7 @@ const fetchSplitTypes = async () => {
     }
 };
 
-const fetchUptimeTrend = async (endpoint, days = 365, split = 'daily') => {
+const fetchUptimeTrend = async (endpoint: number, days = 365, split = 'daily') => {
     try {
         loading.value = true;
         progress.value = 10;
@@ -78,7 +78,7 @@ const fetchUptimeTrend = async (endpoint, days = 365, split = 'daily') => {
         uptimeTrends.value = [];
         const response = await fetch(route('api.statistics.uptimeGraph') + '?endpoint_id=' + endpoint + `&days=${days}&split_type=${split}`);
         const data = await response.json();
-        data.labels.forEach((entry) => {
+        data.labels.forEach((entry: string) => {
             labels.value.push(entry);
         });
         data.graphData.forEach((entry) => {

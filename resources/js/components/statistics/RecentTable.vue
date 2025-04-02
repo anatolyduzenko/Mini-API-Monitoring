@@ -4,7 +4,7 @@ import { Table, TableBody, TableCaption, TableHead, TableHeader, TableRow } from
 import { onMounted, ref } from 'vue';
 import { route } from 'ziggy-js';
 
-const recentLogs = ref([]);
+const recentLogs = ref<Record<string, any>>([]);
 
 const fetchRecentLogs = async () => {
     try {

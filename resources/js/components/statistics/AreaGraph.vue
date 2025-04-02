@@ -5,15 +5,15 @@ import { onMounted, ref } from 'vue';
 import { route } from 'ziggy-js';
 const { getRandomHSLColors } = useChartColors();
 
-const responseTime = ref([]);
-const labels = ref([]);
+const responseTime = ref<Record<string, any>[]>([]);
+const labels = ref<string[]>([]);
 const colors = ref<string[]>([]);
 
 const fetchResponseTime = async () => {
     try {
         const response = await fetch(route('api.statistics.responseTime') + '?days=31');
         const data = await response.json();
-        data.labels.forEach((entry) => {
+        data.labels.forEach((entry: string) => {
             labels.value.push(entry);
         });
         data.graphData.forEach((entry) => {
