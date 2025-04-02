@@ -7,7 +7,6 @@ import { onMounted, ref } from 'vue';
 import { route } from 'ziggy-js';
 
 const uptimeStats = ref<EndpointStatRecord[]>([]);
-const responseData = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const selectedEndpoint = ref<EndpointStatRecord>();
@@ -17,7 +16,6 @@ const fetchUptimeStats = async (page = 1) => {
     try {
         const response = await fetch(route('api.statistics.uptime', { page: page }));
         const data = await response.json();
-        responseData.value = data;
         uptimeStats.value = data.data;
         currentPage.value = data.current_page;
         totalPages.value = data.last_page;
@@ -26,7 +24,7 @@ const fetchUptimeStats = async (page = 1) => {
     }
 };
 
-const openDialog = async (endpoint) => {
+const openDialog = async (endpoint: EndpointStatRecord) => {
     selectedEndpoint.value = endpoint;
     showDialog.value = true;
 };
@@ -55,7 +53,6 @@ onMounted(fetchUptimeStats);
                 />
             </TableBody>
         </Table>
-        <!-- <TailwindPagination class="pt-4" :data="responseData" @pagination-change-page="fetchUptimeStats" /> -->
         <DetailedChart v-if="selectedEndpoint" v-model:open="showDialog" :endpoint="selectedEndpoint" />
     </div>
 </template>

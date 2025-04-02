@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
+import ChartColorsTabs from '@/components/ChartColorsTabs.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import { type BreadcrumbItem } from '@/types';
 
@@ -24,6 +25,10 @@ const breadcrumbItems: BreadcrumbItem[] = [
             <div class="space-y-6">
                 <HeadingSmall title="Appearance settings" description="Update your account's appearance settings" />
                 <AppearanceTabs />
+            </div>
+            <div class="space-y-6">
+                <HeadingSmall title="Charts colors settings" description="Update your account's chart colors settings" />
+                <ChartColorsTabs />
             </div>
         </SettingsLayout>
     </AppLayout>
