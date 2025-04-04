@@ -17,6 +17,7 @@ class Endpoint extends Model
         'body',
         'check_interval',
         'user_id',
+        'alert_threshold',
     ];
 
     public function logs()

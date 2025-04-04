@@ -10,6 +10,7 @@ const editableEndpoint = ref({
     url: '',
     method: 'GET',
     check_interval: 5,
+    alert_threshold: 90,
     user_id: props.currentUser ? props.currentUser.id : null,
 });
 const errors = ref({ name: '', url: '' });
@@ -19,7 +20,15 @@ watch(
     (newValue) => {
         editableEndpoint.value = newValue
             ? { ...newValue, user_id: props.currentUser ? props.currentUser.id : null }
-            : { id: null, name: '', url: '', method: 'GET', check_interval: 5, user_id: props.currentUser ? props.currentUser.id : null };
+            : {
+                  id: null,
+                  name: '',
+                  url: '',
+                  method: 'GET',
+                  check_interval: 5,
+                  alert_threshold: 90,
+                  user_id: props.currentUser ? props.currentUser.id : null,
+              };
     },
     { immediate: true },
 );
@@ -53,7 +62,8 @@ const submitForm = () => {
             <label class="mb-2 block">Check Interval (minutes):</label>
             <input v-model="editableEndpoint.check_interval" type="number" class="mb-3 w-full rounded border p-2" />
 
-            <p class="text-sm text-gray-600">Current User: {{ props.currentUser?.name }}</p>
+            <label class="mb-2 block">Alert threshold (percent):</label>
+            <input v-model="editableEndpoint.alert_threshold" type="number" class="mb-3 w-full rounded border p-2" />
 
             <div class="mt-4 flex justify-between">
                 <button @click="emit('close')" class="rounded bg-gray-400 px-4 py-2 text-white">Cancel</button>
