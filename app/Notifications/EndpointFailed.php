@@ -20,7 +20,6 @@ class EndpointFailed extends Notification implements ShouldQueue
     public function __construct(Endpoint $endpoint)
     {
         $this->endpoint = $endpoint;
-        $this->onConnection('redis');
     }
 
     /**
