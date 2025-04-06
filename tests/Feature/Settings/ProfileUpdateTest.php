@@ -4,6 +4,7 @@ namespace Tests\Feature\Settings;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 
 class ProfileUpdateTest extends TestCase
@@ -24,12 +25,14 @@ class ProfileUpdateTest extends TestCase
     public function test_profile_information_can_be_updated()
     {
         $user = User::factory()->create();
+        Session::start();
 
         $response = $this
             ->actingAs($user)
             ->patch('/settings/profile', [
                 'name' => 'Test User',
                 'email' => 'test@example.com',
+                '_token' => csrf_token(),
             ]);
 
         $response
@@ -46,12 +49,14 @@ class ProfileUpdateTest extends TestCase
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged()
     {
         $user = User::factory()->create();
+        Session::start();
 
         $response = $this
             ->actingAs($user)
             ->patch('/settings/profile', [
                 'name' => 'Test User',
                 'email' => $user->email,
+                '_token' => csrf_token(),
             ]);
 
         $response
@@ -64,11 +69,13 @@ class ProfileUpdateTest extends TestCase
     public function test_user_can_delete_their_account()
     {
         $user = User::factory()->create();
+        Session::start();
 
         $response = $this
             ->actingAs($user)
             ->delete('/settings/profile', [
                 'password' => 'password',
+                '_token' => csrf_token(),
             ]);
 
         $response
@@ -82,12 +89,14 @@ class ProfileUpdateTest extends TestCase
     public function test_correct_password_must_be_provided_to_delete_account()
     {
         $user = User::factory()->create();
+        Session::start();
 
         $response = $this
             ->actingAs($user)
             ->from('/settings/profile')
             ->delete('/settings/profile', [
                 'password' => 'wrong-password',
+                '_token' => csrf_token(),
             ]);
 
         $response
