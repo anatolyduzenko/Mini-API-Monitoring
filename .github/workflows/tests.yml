@@ -49,6 +49,12 @@ jobs:
       - name: Build Assets
         run: npm run build
 
+      - name: Check Cache Config
+        run: php artisan config:show cache
+        
+      - name: Check Queue Config
+        run: php artisan config:show queue
+
       - name: Tests
         env:
           CACHE_DRIVER: array
