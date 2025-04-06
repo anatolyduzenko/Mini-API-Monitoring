@@ -33,7 +33,7 @@ class CheckEndpointJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $cacheKey = 'api_check_'.$this->endpoint->id;
+        $cacheKey = "endpoint_check::{$this->endpoint->id}";
         $lastChecked = Cache::get($cacheKey);
         $interval = $this->endpoint->check_interval * 60;
 
@@ -67,5 +67,9 @@ class CheckEndpointJob implements ShouldQueue
                 'created_at' => now(),
             ]);
         }
+
+        Cache::put($cacheKey, now()->timestamp);
+
+        EvaluateUptimeJob::dispatch($this->endpoint);
     }
 }
