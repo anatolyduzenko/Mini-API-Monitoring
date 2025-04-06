@@ -76,14 +76,13 @@ This API Monitoring Laravel App helps track API performance, availability, and r
 - `POST /login` - Authenticate user
 - `POST /logout` - Logout user
 
-### API Monitoring
-- `GET /monitoring` - Get monitored APIs endpoints and their statuses
-- `POST /monitoring` - Add a new endpoint to monitor
-- `DELETE /monitoring/{id}` - Remove an endpoint from monitoring
+### API Endpoints
+- `GET /endpoints` - Get monitored APIs endpoints 
+- `POST /endpoints` - Add a new endpoint to monitor
+- `DELETE /endpoints/{id}` - Remove an endpoint from monitoring
 
-### Reports
-- `GET /reports/errors` - Retrieve API error logs
-- `GET /reports/performance` - Retrieve API response time trends
+### Dashboard
+- `GET /dashboard` - Dashboard to get some statistics of endpoints
 
 ## Notifications
 - Email notifications for API failures.
