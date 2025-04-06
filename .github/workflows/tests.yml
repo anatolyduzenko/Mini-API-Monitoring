@@ -50,4 +50,7 @@ jobs:
         run: npm run build
 
       - name: Tests
+        env:
+          CACHE_DRIVER: array
+          QUEUE_CONNECTION: sync
         run: ./vendor/bin/phpunit
