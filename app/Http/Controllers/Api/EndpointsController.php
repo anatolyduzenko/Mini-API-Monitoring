@@ -60,6 +60,6 @@ class EndpointsController extends Controller
     {
         $endpoint->delete();
 
-        return response()->json(['message' => 'Deleted successfully'], 200);
+        return response()->json(['message' => 'Deleted successfully'], 204);
     }
 }

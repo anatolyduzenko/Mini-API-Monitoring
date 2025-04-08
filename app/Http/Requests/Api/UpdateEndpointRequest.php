@@ -29,6 +29,7 @@ class UpdateEndpointRequest extends FormRequest
             'body' => 'string|nullable|max:1024',
             'user_id' => 'required|exists:users,id',
             'check_interval' => 'required|integer|min:1',
+            'alert_threshold' => 'integer|min:50',
         ];
     }
 }
