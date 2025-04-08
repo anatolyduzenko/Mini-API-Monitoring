@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait EnumToArray
 {
-    public static function fromCode(int $code): ?self
+    public static function fromCode($code): ?self
     {
         return self::tryFrom($code);
     }

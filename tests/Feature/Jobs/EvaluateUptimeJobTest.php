@@ -1,15 +1,14 @@
 <?php
 
-use Tests\TestCase;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\Endpoint;
-use App\Models\User;
-use App\Models\EndpointLog;
 use App\Jobs\EvaluateUptimeJob;
+use App\Models\Endpoint;
+use App\Models\EndpointLog;
+use App\Models\User;
 use App\Notifications\EndpointFailed;
-use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
 
 class EvaluateUptimeJobTest extends TestCase
 {
@@ -68,7 +67,7 @@ class EvaluateUptimeJobTest extends TestCase
     public function test_it_uses_cache_to_prevent_duplicate_alerts()
     {
         Notification::fake();
-        Cache::put("endpoint:1:notified", true, now()->addMinutes(30));
+        Cache::put('endpoint:1:notified', true, now()->addMinutes(30));
 
         $user = User::factory()->create();
         $endpoint = Endpoint::factory()->create([

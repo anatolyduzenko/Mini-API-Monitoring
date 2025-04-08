@@ -38,7 +38,7 @@ class PasswordUpdateTest extends TestCase
     {
         $user = User::factory()->create();
         Session::start();
-        
+
         $response = $this
             ->actingAs($user)
             ->from('/settings/password')

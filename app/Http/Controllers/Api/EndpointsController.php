@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\StatusCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreEndpointRequest;
 use App\Http\Requests\Api\UpdateEndpointRequest;
@@ -14,7 +15,7 @@ class EndpointsController extends Controller
      */
     public function index()
     {
-        return response()->json(Endpoint::paginate(10));
+        return response()->json(Endpoint::paginate(10), StatusCode::OK->value);
     }
 
     /**
@@ -25,10 +26,10 @@ class EndpointsController extends Controller
         $newEndpoint = Endpoint::create($request->validated());
 
         if (! $newEndpoint) {
-            return response()->json(['error' => 'Failed to create endpoint'], 500);
+            return response()->json(['error' => 'Failed to create endpoint'], StatusCode::INTERNAL_SERVER_ERROR->value);
         }
 
-        return response()->json($newEndpoint, 201);
+        return response()->json($newEndpoint, StatusCode::CREATED->value);
     }
 
     /**
@@ -47,10 +48,10 @@ class EndpointsController extends Controller
         $updatedEndpoint = $endpoint->update($request->validated());
 
         if (! $updatedEndpoint) {
-            return response()->json(['error' => 'Failed to update endpoint'], 500);
+            return response()->json(['error' => 'Failed to update endpoint'], StatusCode::INTERNAL_SERVER_ERROR->value);
         }
 
-        return response()->json($updatedEndpoint, 200);
+        return response()->json($updatedEndpoint, StatusCode::OK->value);
     }
 
     /**
@@ -60,6 +61,6 @@ class EndpointsController extends Controller
     {
         $endpoint->delete();
 
-        return response()->json(['message' => 'Deleted successfully'], 200);
+        return response()->json(['message' => 'Deleted successfully'], StatusCode::NO_CONTENT->value);
     }
 }
