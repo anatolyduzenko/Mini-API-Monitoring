@@ -2,12 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Support\Facades\Http;
+use App\Jobs\CheckEndpointJob;
 use App\Models\Endpoint;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Jobs\CheckEndpointJob;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class CheckEndpointJobTest extends TestCase
@@ -19,7 +19,7 @@ class CheckEndpointJobTest extends TestCase
         Cache::flush();
 
         Http::fake([
-            'https://example.com' => Http::response([], 200)
+            'https://example.com' => Http::response([], 200),
         ]);
 
         $user = User::factory()->create();
@@ -40,7 +40,7 @@ class CheckEndpointJobTest extends TestCase
     public function test_it_logs_failure_when_request_fails()
     {
         Cache::flush();
-        
+
         Http::fake([
             'https://broken.com' => Http::sequence()->pushStatus(500),
         ]);

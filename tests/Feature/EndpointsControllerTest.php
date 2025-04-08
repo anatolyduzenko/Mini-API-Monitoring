@@ -16,7 +16,7 @@ class EndpointsControllerTest extends TestCase
         $this->actingAs($user);
 
         $endpoint = Endpoint::factory()->count(5)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         $response = $this->getJson(route('api.endpoints.index', [
@@ -51,7 +51,7 @@ class EndpointsControllerTest extends TestCase
         ];
 
         $response = $this->postJson(
-            route('api.endpoints.store'), 
+            route('api.endpoints.store'),
             $endpointData,
             [
                 'X-Csrf-Token' => csrf_token(),
@@ -66,14 +66,14 @@ class EndpointsControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $this->actingAs($user);
-        
+
         $endpoint = Endpoint::factory()->create(['user_id' => $user->id]);
 
         $response = $this->getJson(
-            route('api.endpoints.show', 
-            [
-                'endpoint' => $endpoint->id,
-            ])
+            route('api.endpoints.show',
+                [
+                    'endpoint' => $endpoint->id,
+                ])
         );
 
         $response->assertOk();
@@ -102,9 +102,9 @@ class EndpointsControllerTest extends TestCase
 
         $response = $this->putJson(
             route('api.endpoints.update',
-            [
-                'endpoint' => $endpoint->id,
-            ]), 
+                [
+                    'endpoint' => $endpoint->id,
+                ]),
             $updateData,
             [
                 'X-Csrf-Token' => csrf_token(),
@@ -124,8 +124,8 @@ class EndpointsControllerTest extends TestCase
         $endpoint = Endpoint::factory()->create(['user_id' => $user->id]);
 
         $response = $this->deleteJson(
-            route( 'api.endpoints.destroy', [
-                'endpoint' => $endpoint->id, 
+            route('api.endpoints.destroy', [
+                'endpoint' => $endpoint->id,
             ]),
             [],
             [
@@ -136,5 +136,4 @@ class EndpointsControllerTest extends TestCase
         $response->assertNoContent();
         $this->assertDatabaseMissing('endpoints', ['id' => $endpoint->id]);
     }
-
 }

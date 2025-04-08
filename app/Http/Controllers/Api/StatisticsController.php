@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\SplitTypes;
+use App\Enums\StatusCode;
 use App\Http\Controllers\Controller;
 use App\Services\LogsService;
 use App\Services\StatisticsService;
@@ -29,7 +30,7 @@ class StatisticsController extends Controller
 
         $uptimeStatistics = $this->statisticsService->reportUptime($perPage);
 
-        return response()->json($uptimeStatistics);
+        return response()->json($uptimeStatistics, StatusCode::OK->value);
     }
 
     /**
@@ -39,7 +40,7 @@ class StatisticsController extends Controller
     {
         $recentLogs = $this->logsService->recentLogs();
 
-        return response()->json($recentLogs);
+        return response()->json($recentLogs, StatusCode::OK->value);
     }
 
     /**
@@ -72,7 +73,7 @@ class StatisticsController extends Controller
             return $entry->name;
         })->unique()->values();
 
-        return response()->json(['labels' => $endpointLabels, 'graphData' => $graphData]);
+        return response()->json(['labels' => $endpointLabels, 'graphData' => $graphData], StatusCode::OK->value);
     }
 
     /**
@@ -100,6 +101,6 @@ class StatisticsController extends Controller
             return $entry->name;
         })->unique()->values();
 
-        return response()->json(['labels' => $endpointLabels, 'graphData' => $graphData]);
+        return response()->json(['labels' => $endpointLabels, 'graphData' => $graphData], StatusCode::OK->value);
     }
 }

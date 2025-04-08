@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use App\Enums\SplitTypes;
+use App\Enums\StatusCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class SplitTypesControllerTest extends TestCase
@@ -18,9 +18,9 @@ class SplitTypesControllerTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->getJson("/api/split-types");
+            ->getJson(route('api.splitTypes.index'));
 
-        $response->assertStatus(200);
+        $response->assertStatus(StatusCode::OK->value);
         $response->assertJson([
             [
                 'id' => SplitTypes::DAILY->value,
@@ -33,7 +33,7 @@ class SplitTypesControllerTest extends TestCase
             [
                 'id' => SplitTypes::DECAMIN->value,
                 'name' => SplitTypes::DECAMIN->label(),
-            ]
+            ],
         ]);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
+use App\Enums\StatusCode;
 use App\Models\Endpoint;
 use App\Models\EndpointLog;
 use App\Models\User;
-use App\Enums\StatusCode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,7 +17,7 @@ class LogsControllerTest extends TestCase
         $this->actingAs($user);
 
         $endpoint = Endpoint::factory()->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
 
         EndpointLog::factory()->count(3)->create([

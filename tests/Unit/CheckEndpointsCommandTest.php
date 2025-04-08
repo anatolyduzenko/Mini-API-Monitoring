@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use App\Models\Endpoint;
 use App\Jobs\CheckEndpointJob;
+use App\Models\Endpoint;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Bus;
+use Tests\TestCase;
 
 class CheckEndpointsCommandTest extends TestCase
 {

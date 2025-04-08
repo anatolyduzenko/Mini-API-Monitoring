@@ -28,7 +28,7 @@ class PasswordResetTest extends TestCase
         Session::start();
 
         $this->post('/forgot-password', [
-            'email' => $user->email, 
+            'email' => $user->email,
             '_token' => csrf_token(),
         ]);
 

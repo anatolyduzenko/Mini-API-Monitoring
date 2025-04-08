@@ -3,9 +3,9 @@
 namespace Tests\Feature;
 
 use App\Enums\ReportRange;
+use App\Enums\StatusCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ReportRangesControllerTest extends TestCase
@@ -18,14 +18,14 @@ class ReportRangesControllerTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->getJson("/api/report-ranges");
+            ->getJson(route('api.reportRanges.index'));
 
-        $response->assertStatus(200);
+        $response->assertStatus(StatusCode::OK->value);
         $response->assertJson([
             [
                 'id' => ReportRange::DAY->value,
                 'name' => ReportRange::DAY->label(),
-            ]
+            ],
         ]);
     }
 }
