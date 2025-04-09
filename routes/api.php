@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\EndpointsController;
 use App\Http\Controllers\Api\LogsController;
 use App\Http\Controllers\Api\ReportRangesController;
+use App\Http\Controllers\Api\RequestTypesController;
 use App\Http\Controllers\Api\SplitTypesController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\StatusCodesController;
@@ -37,6 +38,9 @@ Route::prefix('api')->group(function () {
 
     Route::get('/split-types', SplitTypesController::class)
         ->name('api.splitTypes.index');
+
+    Route::get('/request-types', RequestTypesController::class)
+        ->name('api.requestTypes.index');
 
     Route::get('/user', function (Request $request) {
         return response()->json($request->user());

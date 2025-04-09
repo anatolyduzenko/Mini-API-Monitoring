@@ -51,7 +51,7 @@ const fetchEndpoints = async () => {
             Object.assign(endpoints.value, data.data);
         }
     } catch (error) {
-        console.error('Error fetching logs:', error);
+        console.error('Error fetching endpoints:', error);
     }
 };
 
@@ -61,7 +61,7 @@ const fetchStatusCodes = async () => {
         const data = await response.json();
         statusCodes.value = data;
     } catch (error) {
-        console.error('Error fetching logs:', error);
+        console.error('Error fetching status codes:', error);
     }
 };
 

@@ -30,6 +30,8 @@ class StoreEndpointRequest extends FormRequest
             'user_id' => 'required|exists:users,id',
             'check_interval' => 'required|integer|min:1',
             'alert_threshold' => 'integer:min:50',
+            'username' => 'string|max:150',
+            'password' => 'string|max:150',
         ];
     }
 }
