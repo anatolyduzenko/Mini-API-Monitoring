@@ -43,9 +43,42 @@ class CheckEndpointJob implements ShouldQueue
             return;
         }
 
+        $httpClient = Http::timeout(10);
+
+        if ($this->endpoint->auth_type === 'basic') {
+            $httpClient = $httpClient->withBasicAuth($this->endpoint->username, $this->endpoint->password);
+        }
+
+        if ($this->endpoint->auth_type === 'token') {
+
+            if ($this->endpoint->auth_token === null) {
+                $authResponse = Http::asForm()->post($this->endpoint->auth_url, [
+                    'username' => $this->endpoint->username,
+                    'password' => $this->endpoint->password,
+                ]);
+
+                if ($authResponse->successful()) {
+                    $tokenKey = $this->endpoint->auth_token_name ?? 'token';
+                    $token = data_get($authResponse->json(), $tokenKey);
+
+                    if ($token) {
+                        $this->endpoint->auth_token = $token;
+                        $this->endpoint->save();
+                        $httpClient = $httpClient->withToken('Bearer '.$token);
+                    } else {
+                        Log::warning("Token not found using key [{$tokenKey}]");
+                    }
+                } else {
+                    Log::warning("Auth failed for {$this->endpoint->name}");
+                }
+            } else {
+                $httpClient = $httpClient->withToken('Bearer '.$this->endpoint->auth_token);
+            }
+        }
+
         try {
             $start = microtime(true);
-            $response = Http::timeout(10)->send($this->endpoint->method, $this->endpoint->url);
+            $response = $httpClient->send($this->endpoint->method, $this->endpoint->url);
             $time = round((microtime(true) - $start) * 1000);
 
             Log::info("Checked {$this->endpoint->name}: {$response->status()} in {$time}ms");
@@ -62,7 +95,7 @@ class CheckEndpointJob implements ShouldQueue
 
             EndpointLog::create([
                 'endpoint_id' => $this->endpoint->id,
-                'status_code' => 0,
+                'status_code' => 500,
                 'response_time' => null,
                 'created_at' => now(),
             ]);

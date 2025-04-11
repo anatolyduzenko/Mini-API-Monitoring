@@ -22,6 +22,8 @@ class Endpoint extends Model
         'password',
         'auth_type',
         'auth_token',
+        'auth_token_name',
+        'auth_url',
     ];
 
     public function logs()

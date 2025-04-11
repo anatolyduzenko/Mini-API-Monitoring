@@ -21,6 +21,8 @@ const editableEndpoint = ref({
     user_id: props.currentUser ? props.currentUser.id : null,
     auth_type: '',
     auth_token: '',
+    auth_token_name: '',
+    auth_url: '',
     username: '',
     password: '',
 });
@@ -52,7 +54,9 @@ watch(
                   body: '',
                   user_id: props.currentUser ? props.currentUser.id : null,
                   auth_token: '',
+                  auth_toke_name: '',
                   auth_type: '',
+                  auth_url: '',
                   username: '',
                   password: '',
               };
@@ -202,7 +206,7 @@ onMounted(() => {
                                 <Select
                                     v-model="editableEndpoint.auth_type"
                                     id="auth_type"
-                                    :defaultValue="editableEndpoint.auth_type"
+                                    :defaultValue="editableEndpoint?.auth_type ?? 'none'"
                                     class="h-[37px] p-2"
                                 >
                                     <SelectTrigger class="mb-3 w-[180px]">
@@ -214,16 +218,22 @@ onMounted(() => {
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
-                                <div class="border p-2">
-                                    <Label class="mb-2 block" htmlFor="username">Username:</Label>
-                                    <input v-model="editableEndpoint.username" id="username" type="text" class="mb-3 w-full rounded border p-2" />
+                                <!-- <div class="border p-2"> -->
+                                <Label class="mb-2 block" htmlFor="username">Authorization URL:</Label>
+                                <input v-model="editableEndpoint.auth_url" id="auth_url" type="text" class="mb-3 w-full rounded border p-2" />
 
-                                    <Label class="mb-2 block" htmlFor="password">Password:</Label>
-                                    <input v-model="editableEndpoint.password" id="password" type="password" class="mb-3 w-full rounded border p-2" />
+                                <Label class="mb-2 block" htmlFor="username">Username:</Label>
+                                <input v-model="editableEndpoint.username" id="username" type="text" class="mb-3 w-full rounded border p-2" />
 
-                                    <Label class="mb-2 block" htmlFor="username">Token:</Label>
-                                    <input v-model="editableEndpoint.auth_token" id="token" type="text" class="mb-3 w-full rounded border p-2" />
-                                </div>
+                                <Label class="mb-2 block" htmlFor="password">Password:</Label>
+                                <input v-model="editableEndpoint.password" id="password" type="password" class="mb-3 w-full rounded border p-2" />
+
+                                <Label class="mb-2 block" htmlFor="username">Token:</Label>
+                                <input v-model="editableEndpoint.auth_token" id="token" type="password" class="mb-3 w-full rounded border p-2" />
+
+                                <Label class="mb-2 block" htmlFor="username">Token Name:</Label>
+                                <input v-model="editableEndpoint.auth_token_name" id="token" type="text" class="mb-3 w-full rounded border p-2" />
+                                <!-- </div> -->
                             </div>
                         </div>
                     </div>

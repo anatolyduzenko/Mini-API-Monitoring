@@ -37,6 +37,8 @@ class StoreEndpointRequest extends FormRequest
             'password' => 'string|nullable|max:150',
             'auth_type' => [Rule::enum(AuthenticationType::class)],
             'auth_token' => 'string|nullable|max:150',
+            'auth_token_name' => 'string|nullable|max:150',
+            'auth_url' => 'url|nullable',
         ];
     }
 }
