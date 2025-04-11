@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use App\Traits\EnumToArray;
 
-enum RequestTypes: string
+enum RequestType: string
 {
     use EnumToArray;
     case GET = 'GET';

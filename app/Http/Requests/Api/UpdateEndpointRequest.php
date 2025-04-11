@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Enums\AuthenticationType;
+use App\Enums\RequestType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateEndpointRequest extends FormRequest
 {
@@ -24,14 +27,15 @@ class UpdateEndpointRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'url' => 'required|url',
-            'method' => 'required|string|in:GET,POST,PUT,DELETE',
+            'method' => [Rule::enum(RequestType::class)],
             'headers' => 'string|nullable|max:1024',
             'body' => 'string|nullable|max:1024',
             'user_id' => 'required|exists:users,id',
             'check_interval' => 'required|integer|min:1',
             'alert_threshold' => 'integer|min:50',
-            'username' => 'string|max:150',
-            'password' => 'string|max:150',
+            'username' => 'string|nullable|max:150',
+            'password' => 'string|nullable|max:150',
+            'auth_type' => [Rule::enum(AuthenticationType::class)],
         ];
     }
 }

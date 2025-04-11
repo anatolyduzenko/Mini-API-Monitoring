@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthenticationTypesController;
 use App\Http\Controllers\Api\EndpointsController;
 use App\Http\Controllers\Api\LogsController;
 use App\Http\Controllers\Api\ReportRangesController;
@@ -30,6 +31,9 @@ Route::prefix('api')->group(function () {
     Route::get('/logs', LogsController::class)
         ->name('api.logs.index');
 
+    /**
+     * Helper routes
+     */
     Route::get('/status-codes', StatusCodesController::class)
         ->name('api.statusCodes.index');
 
@@ -42,10 +46,14 @@ Route::prefix('api')->group(function () {
     Route::get('/request-types', RequestTypesController::class)
         ->name('api.requestTypes.index');
 
+    Route::get('/auth-types', AuthenticationTypesController::class)
+        ->name('api.authTypes.index');
+
     Route::get('/user', function (Request $request) {
         return response()->json($request->user());
     })->name('api.user');
 
+    /** End helper routes */
     Route::prefix('statistics')->group(function () {
 
         Route::get('/uptime', [StatisticsController::class, 'getUptime'])

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\SplitTypes;
+use App\Enums\SplitType;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -13,6 +13,6 @@ class SplitTypesController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return response()->json(SplitTypes::asLabels());
+        return response()->json(SplitType::asLabels());
     }
 }

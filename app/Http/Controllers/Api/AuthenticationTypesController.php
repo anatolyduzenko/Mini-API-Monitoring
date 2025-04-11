@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\RequestType;
+use App\Enums\AuthenticationType;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class RequestTypesController extends Controller
+class AuthenticationTypesController extends Controller
 {
     /**
      * Handle the incoming request.
      */
     public function __invoke(Request $request)
     {
-        return response()->json(RequestType::asLabels());
+        return response()->json(AuthenticationType::asLabels());
     }
 }

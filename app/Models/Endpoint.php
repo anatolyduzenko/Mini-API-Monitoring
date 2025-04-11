@@ -20,6 +20,8 @@ class Endpoint extends Model
         'alert_threshold',
         'username',
         'password',
+        'auth_type',
+        'auth_token',
     ];
 
     public function logs()

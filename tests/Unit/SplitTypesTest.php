@@ -2,27 +2,27 @@
 
 namespace Tests\Unit;
 
-use App\Enums\SplitTypes;
+use App\Enums\SplitType;
 use PHPUnit\Framework\TestCase;
 
 class SplitTypesTest extends TestCase
 {
     public function test_split_types_values()
     {
-        $this->assertEquals('daily', SplitTypes::DAILY->value);
-        $this->assertEquals('hourly', SplitTypes::HOURLY->value);
-        $this->assertEquals('decamin', SplitTypes::DECAMIN->value);
+        $this->assertEquals('daily', SplitType::DAILY->value);
+        $this->assertEquals('hourly', SplitType::HOURLY->value);
+        $this->assertEquals('decamin', SplitType::DECAMIN->value);
     }
 
     public function test_from_code()
     {
-        $type = SplitTypes::fromCode('daily');
-        $this->assertSame(SplitTypes::DAILY, $type);
+        $type = SplitType::fromCode('daily');
+        $this->assertSame(SplitType::DAILY, $type);
     }
 
     public function test_try_from_value()
     {
-        $type = SplitTypes::tryFrom('monthly');
+        $type = SplitType::tryFrom('monthly');
         $this->assertNull($type);
     }
 
@@ -34,6 +34,6 @@ class SplitTypesTest extends TestCase
             ['id' => 'decamin', 'name' => '10 Minutes'],
         ];
 
-        $this->assertEquals($expected, SplitTypes::asLabels());
+        $this->assertEquals($expected, SplitType::asLabels());
     }
 }
