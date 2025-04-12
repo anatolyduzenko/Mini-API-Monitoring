@@ -64,7 +64,7 @@ class CheckEndpointJob implements ShouldQueue
                     if ($token) {
                         $this->endpoint->auth_token = $token;
                         $this->endpoint->save();
-                        $httpClient = $httpClient->withToken('Bearer '.$token);
+                        $httpClient = $httpClient->withToken($token);
                     } else {
                         Log::warning("Token not found using key [{$tokenKey}]");
                     }
@@ -72,7 +72,7 @@ class CheckEndpointJob implements ShouldQueue
                     Log::warning("Auth failed for {$this->endpoint->name}");
                 }
             } else {
-                $httpClient = $httpClient->withToken('Bearer '.$this->endpoint->auth_token);
+                $httpClient = $httpClient->withToken($this->endpoint->auth_token);
             }
         }
 
