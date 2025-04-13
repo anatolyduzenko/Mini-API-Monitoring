@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Enums\SplitTypes;
+use App\Enums\SplitType;
 use App\Models\Endpoint;
 use Illuminate\Support\Facades\DB;
 
@@ -41,12 +41,12 @@ class StatisticsService
      *
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
-    public function uptimeTrendData(int $days, SplitTypes $splitType = SplitTypes::DAILY, $endpointId = null)
+    public function uptimeTrendData(int $days, SplitType $splitType = SplitType::DAILY, $endpointId = null)
     {
         $dateSplit = match ($splitType) {
-            SplitTypes::DAILY => 'DATE(endpoint_logs.created_at) as date',
-            SplitTypes::HOURLY => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:00:00\') as date',
-            SplitTypes::DECAMIN => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:%i:00\') as date',
+            SplitType::DAILY => 'DATE(endpoint_logs.created_at) as date',
+            SplitType::HOURLY => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:00:00\') as date',
+            SplitType::DECAMIN => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:%i:00\') as date',
         };
 
         $query = DB::table('endpoint_logs')

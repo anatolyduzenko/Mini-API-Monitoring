@@ -4,7 +4,7 @@ namespace App\Enums;
 
 use App\Traits\EnumToArray;
 
-enum SplitTypes: string
+enum SplitType: string
 {
     use EnumToArray;
     case DAILY = 'daily';

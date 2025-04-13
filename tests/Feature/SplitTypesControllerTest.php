@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Enums\SplitTypes;
+use App\Enums\SplitType;
 use App\Enums\StatusCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,16 +23,16 @@ class SplitTypesControllerTest extends TestCase
         $response->assertStatus(StatusCode::OK->value);
         $response->assertJson([
             [
-                'id' => SplitTypes::DAILY->value,
-                'name' => SplitTypes::DAILY->label(),
+                'id' => SplitType::DAILY->value,
+                'name' => SplitType::DAILY->label(),
             ],
             [
-                'id' => SplitTypes::HOURLY->value,
-                'name' => SplitTypes::HOURLY->label(),
+                'id' => SplitType::HOURLY->value,
+                'name' => SplitType::HOURLY->label(),
             ],
             [
-                'id' => SplitTypes::DECAMIN->value,
-                'name' => SplitTypes::DECAMIN->label(),
+                'id' => SplitType::DECAMIN->value,
+                'name' => SplitType::DECAMIN->label(),
             ],
         ]);
     }

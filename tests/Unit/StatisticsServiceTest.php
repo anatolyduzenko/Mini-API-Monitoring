@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\SplitTypes;
+use App\Enums\SplitType;
 use App\Enums\StatusCode;
 use App\Models\Endpoint;
 use App\Models\EndpointLog;
@@ -66,7 +66,7 @@ class StatisticsServiceTest extends TestCase
             'created_at' => now()->subDays(1),
         ]);
 
-        $result = $this->service->uptimeTrendData(2, SplitTypes::DAILY);
+        $result = $this->service->uptimeTrendData(2, SplitType::DAILY);
 
         $this->assertNotEmpty($result);
         $row = $result->first();

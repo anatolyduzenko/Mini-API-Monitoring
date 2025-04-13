@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Enums\AuthenticationType;
+use App\Enums\RequestType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreEndpointRequest extends FormRequest
 {
@@ -24,12 +27,18 @@ class StoreEndpointRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'url' => 'required|url',
-            'method' => 'required|string|in:GET,POST,PUT,DELETE',
+            'method' => [Rule::enum(RequestType::class)],
             'headers' => 'string|max:1024',
             'body' => 'string|max:1024',
             'user_id' => 'required|exists:users,id',
             'check_interval' => 'required|integer|min:1',
             'alert_threshold' => 'integer:min:50',
+            'username' => 'string|nullable|max:150',
+            'password' => 'string|nullable|max:150',
+            'auth_type' => [Rule::enum(AuthenticationType::class)],
+            'auth_token' => 'string|nullable|max:150',
+            'auth_token_name' => 'string|nullable|max:150',
+            'auth_url' => 'url|nullable',
         ];
     }
 }
