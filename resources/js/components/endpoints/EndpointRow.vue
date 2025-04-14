@@ -8,13 +8,14 @@ const emit = defineEmits(['edit', 'delete']);
 
 <template>
     <TableRow :key="endpoint.id">
-        <TableCell class="font-medium">
+        <TableCell class="py-2 font-medium">
             {{ endpoint.name }}
         </TableCell>
-        <TableCell>{{ endpoint.url }}</TableCell>
-        <TableCell>{{ endpoint.method }}</TableCell>
-        <TableCell>{{ endpoint.check_interval }}</TableCell>
-        <TableCell class="text-right">
+        <TableCell class="py-2">{{ endpoint.url }}</TableCell>
+        <TableCell class="py-2">{{ endpoint.auth_type }}</TableCell>
+        <TableCell class="py-2">{{ endpoint.method }}</TableCell>
+        <TableCell class="py-2">{{ endpoint.check_interval }}</TableCell>
+        <TableCell class="py-2 text-right">
             <button @click="emit('edit', endpoint)" class="mr-2 text-green-500">✏️</button>
             <button @click="emit('delete', endpoint)" class="text-red-500">🗑️</button>
         </TableCell>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
-
-import { TailwindPagination } from 'laravel-vue-pagination';
 
 import EndpointForm from '@/components/endpoints/EndpointForm.vue';
 import EndpointsTableDesktop from '@/components/endpoints/EndpointsTableDesktop.vue';
 import EndpointsTableMobile from '@/components/endpoints/EndpointsTableMobile.vue';
+
+import { Pagination, PaginationFirst, PaginationLast, PaginationNext, PaginationPrev } from '@/components/ui/pagination';
 
 const endpoints = ref([]);
 const errors = ref({});
@@ -14,6 +14,9 @@ const currentUser = ref(null);
 const showModal = ref(false);
 const isEditing = ref(false);
 const selectedEndpoint = ref(null);
+const page = ref(1);
+const totalItems = ref(10);
+const perPage = ref(10);
 
 const requestHeaders = new Headers();
 requestHeaders.append('Content-Type', 'application/json');
@@ -23,7 +26,10 @@ requestHeaders.append('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-to
 const fetchEndpoints = async (page = 1) => {
     try {
         const response = await fetch(route('api.endpoints.index', { page: page }));
-        endpoints.value = await response.json();
+        const data = await response.json();
+        endpoints.value = data.data;
+        totalItems.value = data.total;
+        perPage.value = data.per_page;
     } catch (error) {
         console.error('Error fetching endpoints:', error);
     }
@@ -93,6 +99,10 @@ const deleteEndpoint = async (endpoint) => {
     }
 };
 
+watch(page, (page) => {
+    fetchEndpoints(page);
+});
+
 onMounted(() => {
     fetchEndpoints();
     fetchCurrentUser();
@@ -105,7 +115,7 @@ onMounted(() => {
             <button @click="openCreateForm" class="rounded bg-blue-500 px-4 py-2 text-white">+ Add Endpoint</button>
         </div>
 
-        <div class="hidden md:block">
+        <div class="hidden p-4 md:block">
             <EndpointsTableDesktop :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
         </div>
 
@@ -113,8 +123,13 @@ onMounted(() => {
             <EndpointsTableMobile :endpoints="endpoints" @edit="openEditForm" @delete="deleteEndpoint" />
         </div>
 
-        <div class="p-4">
-            <TailwindPagination :data="endpoints" @pagination-change-page="fetchEndpoints" />
+        <div v-if="totalItems > 10" class="p-4">
+            <Pagination v-model:page="page" :items-per-page="10" :total="totalItems" :sibling-count="1" show-edges :default-page="2">
+                <PaginationFirst />
+                <PaginationPrev />
+                <PaginationNext />
+                <PaginationLast />
+            </Pagination>
         </div>
 
         <EndpointForm

@@ -19,7 +19,7 @@ const fetchUptimeTrend = async () => {
         data.graphData.forEach((entry) => {
             uptimeTrends.value.push(entry);
         });
-        console.log(chartColors);
+
         if (chartColors.value === 'random') {
             colors.value = getRandomHSLColors(labels.length);
         }
