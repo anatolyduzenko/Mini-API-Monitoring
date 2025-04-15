@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 
-final class LogsService
+class LogsService
 {
     /**
      * Returns Recent API logs

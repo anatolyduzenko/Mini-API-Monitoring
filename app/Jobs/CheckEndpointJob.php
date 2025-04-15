@@ -35,6 +35,7 @@ class CheckEndpointJob implements ShouldQueue
     {
         if (! $service->shouldCheck($this->endpoint)) {
             Log::info("Skipping {$this->endpoint->name}, checked recently.");
+
             return;
         }
 
@@ -42,5 +43,4 @@ class CheckEndpointJob implements ShouldQueue
 
         EvaluateUptimeJob::dispatch($this->endpoint);
     }
-
 }

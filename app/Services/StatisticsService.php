@@ -6,7 +6,7 @@ use App\Enums\SplitType;
 use App\Models\Endpoint;
 use Illuminate\Support\Facades\DB;
 
-final class StatisticsService
+class StatisticsService
 {
     /**
      * Prepares data for Uptime Report
@@ -64,7 +64,7 @@ final class StatisticsService
         if ($endpointId) {
             $query->where('endpoint_id', '=', $endpointId);
         }
-        
+
         return $query->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();

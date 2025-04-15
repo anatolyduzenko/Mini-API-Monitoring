@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-final class EndpointCheckerService
+class EndpointCheckerService
 {
     public function shouldCheck(Endpoint $endpoint)
     {
@@ -17,7 +17,7 @@ final class EndpointCheckerService
         $lastChecked = Cache::get($key);
         $interval = $endpoint->check_interval * 60;
 
-        return !$lastChecked || (now()->timestamp - $lastChecked) < $interval;
+        return ! $lastChecked || (now()->timestamp - $lastChecked) < $interval;
     }
 
     public function check(Endpoint $endpoint)
@@ -65,6 +65,7 @@ final class EndpointCheckerService
             if ($token) {
                 $endpoint->auth_token = $token;
                 $endpoint->save();
+
                 return $client->withToken($token);
             }
 
