@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LineChart } from '@/components/ui/chart-line';
 import { useChartColors } from '@/composables/useChartColors';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import { route } from 'ziggy-js';
 
 const uptimeTrends = ref<Record<string, any>[]>([]);
@@ -9,9 +9,12 @@ const labels = reactive<string[]>([]);
 const colors = ref<string[]>([]);
 const { chartColors, getRandomHSLColors } = useChartColors();
 
+let intervalId: ReturnType<typeof setInterval>;
+
 const fetchUptimeTrend = async () => {
     try {
-        const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7&split_type=daily');
+        uptimeTrends.value = [];
+        const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7&split_type=hourly');
         const data = await response.json();
         data.labels.forEach((entry: string) => {
             labels.push(entry);
@@ -30,6 +33,11 @@ const fetchUptimeTrend = async () => {
 
 onMounted(() => {
     fetchUptimeTrend();
+    intervalId = setInterval(fetchUptimeTrend, 30_000);
+});
+
+onUnmounted(() => {
+    clearInterval(intervalId);
 });
 </script>
 
