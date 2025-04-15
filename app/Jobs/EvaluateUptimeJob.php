@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-class EvaluateUptimeJob implements ShouldQueue
+final class EvaluateUptimeJob implements ShouldQueue
 {
     use Dispatchable, Queueable, SerializesModels;
 

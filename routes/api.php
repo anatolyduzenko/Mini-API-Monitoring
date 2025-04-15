@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('api')->group(function () {
-
     Route::get('/endpoints', [EndpointsController::class, 'index'])
         ->name('api.endpoints.index');
 
@@ -55,7 +54,6 @@ Route::prefix('api')->group(function () {
 
     /** End helper routes */
     Route::prefix('statistics')->group(function () {
-
         Route::get('/uptime', [StatisticsController::class, 'getUptime'])
             ->name('api.statistics.uptime');
 
@@ -67,7 +65,5 @@ Route::prefix('api')->group(function () {
 
         Route::get('/recent-logs', [StatisticsController::class, 'getRecentLogs'])
             ->name('api.statistics.recent');
-
     });
-
 })->middleware(['auth', 'verified']);

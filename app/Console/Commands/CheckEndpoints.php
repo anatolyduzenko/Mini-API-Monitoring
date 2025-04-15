@@ -7,7 +7,7 @@ use App\Models\Endpoint;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 
-class CheckEndpoints extends Command
+final class CheckEndpoints extends Command
 {
     /**
      * The name and signature of the console command.

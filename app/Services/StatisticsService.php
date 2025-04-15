@@ -6,7 +6,7 @@ use App\Enums\SplitType;
 use App\Models\Endpoint;
 use Illuminate\Support\Facades\DB;
 
-class StatisticsService
+final class StatisticsService
 {
     /**
      * Prepares data for Uptime Report
@@ -15,12 +15,14 @@ class StatisticsService
      */
     public function reportUptime(int $perPage)
     {
-        $uptimeStatistics = Endpoint::withCount(['logs as total_checks' => function ($query) {
+        return Endpoint::withCount(['logs as total_checks' => function ($query) {
             $query->select(DB::raw('count(*)'));
         }, 'logs as successful_checks' => function ($query) {
             $query->where('status_code', '>=', 200)
                 ->where('status_code', '<', 400)
-                ->select(DB::raw('count(*)'));
+                ->select(
+                    DB::raw('count(*)')
+                );
         }])
             ->paginate($perPage)
             ->through(function ($endpoint) {
@@ -32,13 +34,12 @@ class StatisticsService
                         : 0,
                 ];
             });
-
-        return $uptimeStatistics;
     }
 
     /**
      * Prepares data for uptime Chart
      *
+     * @param  int|null  $endpointId
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
     public function uptimeTrendData(int $days, SplitType $splitType = SplitType::DAILY, $endpointId = null)
@@ -63,11 +64,9 @@ class StatisticsService
         if ($endpointId) {
             $query->where('endpoint_id', '=', $endpointId);
         }
-
-        $trendData = $query->groupBy('date', 'endpoint_id', 'name')
+        
+        return $query->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
-
-        return $trendData;
     }
 }
