@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EndpointFailed extends Notification implements ShouldQueue
+final class EndpointFailed extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -43,17 +43,5 @@ class EndpointFailed extends Notification implements ShouldQueue
             ->line("Method: {$this->endpoint->method}")
             ->line('Please investigate the issue.')
             ->action('View Dashboard', url('/dashboard'));
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
     }
 }

@@ -13,7 +13,7 @@ class LogsService
      */
     public function recentLogs()
     {
-        $recentLogs = DB::table('endpoint_logs')
+        return DB::table('endpoint_logs')
             ->join(
                 'endpoints',
                 'endpoint_logs.endpoint_id',
@@ -24,14 +24,14 @@ class LogsService
                 'endpoints.name',
                 'endpoint_logs.status_code',
                 'endpoint_logs.response_time',
-                'endpoint_logs.created_at')
+                'endpoint_logs.created_at'
+            )
             ->orderBy(
                 'endpoint_logs.created_at',
-                'desc')
+                'desc'
+            )
             ->limit(9)
             ->get();
-
-        return $recentLogs;
     }
 
     /**
@@ -41,7 +41,7 @@ class LogsService
      */
     public function responseTime(int $days)
     {
-        $responseTime = DB::table('endpoint_logs')
+        return DB::table('endpoint_logs')
             ->select(
                 DB::raw('DATE(endpoint_logs.created_at) as date'),
                 'endpoints.name',
@@ -53,7 +53,5 @@ class LogsService
             ->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
-
-        return $responseTime;
     }
 }

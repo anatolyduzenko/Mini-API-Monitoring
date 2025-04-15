@@ -30,7 +30,8 @@ class LogsController extends Controller
 
         $logsData = $query->orderBy(
             'endpoint_logs.created_at',
-            'desc')
+            'desc'
+        )
             ->paginate($perPage);
 
         return response()->json($logsData);
