@@ -5,14 +5,14 @@ namespace Tests\Unit;
 use App\Enums\StatusCode;
 use App\Models\Endpoint;
 use App\Models\User;
-use App\Services\EndpointCheckerService;
+use App\Services\CheckEndpointService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
-class EndpointCheckerServiceTest extends TestCase
+class CheckEndpointServiceTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -35,7 +35,7 @@ class EndpointCheckerServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new EndpointCheckerService;
+        $service = new CheckEndpointService();
 
         $this->assertTrue($service->shouldCheck($endpoint));
 
@@ -68,7 +68,7 @@ class EndpointCheckerServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new EndpointCheckerService;
+        $service = new CheckEndpointService();
         $service->check($endpoint);
 
         Http::assertSent(function ($request) {
@@ -108,7 +108,7 @@ class EndpointCheckerServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new EndpointCheckerService;
+        $service = new CheckEndpointService();
         $service->check($endpoint);
 
         Http::assertSent(function ($request) use ($fakeToken) {

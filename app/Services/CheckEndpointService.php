@@ -3,13 +3,12 @@
 namespace App\Services;
 
 use App\Models\Endpoint;
-use App\Models\EndpointLog;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class EndpointCheckerService
+class CheckEndpointService
 {
     public function shouldCheck(Endpoint $endpoint)
     {
@@ -28,9 +27,11 @@ class EndpointCheckerService
         try {
             $response = $client->send($endpoint->method, $endpoint->url);
             $time = round((microtime(true) - $start) * 1000);
-            $this->logSuccess($endpoint, $response->status(), $time);
+            Log::info("Checked {$endpoint->name}: {$response->status()} in {$time}ms");
+            LogsService::logSuccess($endpoint, $response->status(), $time);
         } catch (\Exception $e) {
-            $this->logFailure($endpoint, $e);
+            Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());
+            LogsService::logFailure($endpoint, $e);
         }
 
         Cache::put("endpoint_check::{$endpoint->id}", now()->timestamp);
@@ -39,7 +40,6 @@ class EndpointCheckerService
     private function prepareHttpClient(Endpoint $endpoint)
     {
         $client = Http::timeout(10);
-
         return match ($endpoint->auth_type) {
             'basic' => $client->withBasicAuth($endpoint->username, $endpoint->password),
             'token' => $this->tokenAuthClient($client, $endpoint),
@@ -77,27 +77,4 @@ class EndpointCheckerService
         return $client;
     }
 
-    private function logSuccess(Endpoint $endpoint, int $status, float $time)
-    {
-        Log::info("Checked {$endpoint->name}: {$status} in {$time}ms");
-
-        EndpointLog::create([
-            'endpoint_id' => $endpoint->id,
-            'status_code' => $status,
-            'response_time' => $time,
-            'created_at' => now(),
-        ]);
-    }
-
-    private function logFailure(Endpoint $endpoint, \Exception $e)
-    {
-        Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());
-
-        EndpointLog::create([
-            'endpoint_id' => $endpoint->id,
-            'status_code' => 500,
-            'response_time' => null,
-            'created_at' => now(),
-        ]);
-    }
 }
