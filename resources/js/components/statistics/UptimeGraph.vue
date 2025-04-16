@@ -13,7 +13,7 @@ let intervalId: ReturnType<typeof setInterval>;
 
 const fetchUptimeTrend = async () => {
     try {
-        uptimeTrends.value = [];
+        uptimeTrends.value.splice(0);
         const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7&split_type=hourly');
         const data = await response.json();
         data.labels.forEach((entry: string) => {
