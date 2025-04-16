@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\SplitType;
 use App\Enums\StatusCode;
 use App\Services\LogsService;
 use App\Services\StatisticsService;
@@ -95,11 +96,13 @@ class StatisticsControllerTest extends TestCase
         ]);
 
         $mockLogs = $this->createMock(LogsService::class);
-        $mockLogs->method('responseTime')->willReturn($mockResponseTime);
+        $mockLogs->method('responseTime')
+            ->with(1, SplitType::DAILY)
+            ->willReturn($mockResponseTime);
         $this->app->instance(LogsService::class, $mockLogs);
 
         $response = $this->getJson(
-            route('api.statistics.responseTime', ['days' => 1])
+            route('api.statistics.responseTime', ['days' => 1, 'split_type' => SplitType::DAILY->value])
         );
 
         $response->assertStatus(StatusCode::OK->value)

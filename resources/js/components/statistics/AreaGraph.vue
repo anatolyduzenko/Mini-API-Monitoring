@@ -13,7 +13,7 @@ let intervalId: ReturnType<typeof setInterval>;
 
 const fetchResponseTime = async () => {
     try {
-        responseTime.value = [];
+        responseTime.value.splice(0);
         const response = await fetch(route('api.statistics.responseTime') + '?days=1&split_type=decamin');
         const data = await response.json();
         data.labels.forEach((entry: string) => {

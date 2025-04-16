@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\SplitType;
 use App\Enums\StatusCode;
 use App\Models\Endpoint;
 use App\Models\EndpointLog;
@@ -53,7 +54,7 @@ class LogsServiceTest extends TestCase
             'created_at' => now()->subDays(1),
         ]);
 
-        $result = $this->service->responseTime(7);
+        $result = $this->service->responseTime(7, SplitType::DAILY);
 
         $this->assertNotEmpty($result);
         $this->assertObjectHasProperty('date', $result->first());

@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Enums\SplitType;
 use App\Models\Endpoint;
 use App\Models\EndpointLog;
+use App\Traits\DateFormatter;
 use Illuminate\Support\Facades\DB;
 
 class LogsService
 {
+    use DateFormatter;
+
     /**
      * Returns Recent API logs
      *
@@ -44,11 +47,7 @@ class LogsService
      */
     public function responseTime(int $days, SplitType $splitType)
     {
-        $dateSplit = match ($splitType) {
-            SplitType::DAILY => 'DATE(endpoint_logs.created_at) as date',
-            SplitType::HOURLY => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:00:00\') as date',
-            SplitType::DECAMIN => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:%i:00\') as date',
-        };
+        $dateSplit = $this->dateFormatter($splitType);
 
         return DB::table('endpoint_logs')
             ->select(

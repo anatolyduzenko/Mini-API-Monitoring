@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Enums\SplitType;
 use App\Enums\StatusCode;
 use App\Models\Endpoint;
+use App\Traits\DateFormatter;
 use Illuminate\Support\Facades\DB;
 
 class StatisticsService
 {
+    use DateFormatter;
+
     /**
      * Prepares data for Uptime Report
      *
@@ -65,14 +68,5 @@ class StatisticsService
         return $query->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
-    }
-
-    private function dateFormatter(SplitType $splitType)
-    {
-        return match ($splitType) {
-            SplitType::DAILY => 'DATE(endpoint_logs.created_at) as date',
-            SplitType::HOURLY => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:00:00\') as date',
-            SplitType::DECAMIN => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:%i:00\') as date',
-        };
     }
 }
