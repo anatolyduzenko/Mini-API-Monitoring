@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Enums\SplitType;
+use App\Models\Endpoint;
+use App\Models\EndpointLog;
 use Illuminate\Support\Facades\DB;
 
 class LogsService
@@ -60,5 +62,25 @@ class LogsService
             ->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
+    }
+
+    public static function logSuccess(Endpoint $endpoint, int $status, float $time)
+    {
+        EndpointLog::create([
+            'endpoint_id' => $endpoint->id,
+            'status_code' => $status,
+            'response_time' => $time,
+            'created_at' => now(),
+        ]);
+    }
+
+    public static function logFailure(Endpoint $endpoint, \Exception $e)
+    {
+        EndpointLog::create([
+            'endpoint_id' => $endpoint->id,
+            'status_code' => 500,
+            'response_time' => null,
+            'created_at' => now(),
+        ]);
     }
 }
