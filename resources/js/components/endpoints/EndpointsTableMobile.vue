@@ -5,7 +5,7 @@ const emit = defineEmits(['edit', 'delete']);
 </script>
 
 <template>
-    <div v-for="endpoint in endpoints.data" :key="endpoint.id" class="mx-4 rounded-lg border border-gray-200 p-4 shadow-sm">
+    <div v-for="endpoint in endpoints" :key="endpoint.id" class="mx-4 rounded-lg border border-gray-200 p-4 shadow-sm">
         <p class="w-full overflow-hidden"><strong>Name:</strong> {{ endpoint.name }}</p>
         <p><strong>Method:</strong> {{ endpoint.method }}</p>
         <p>

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\SplitType;
+use App\Enums\StatusCode;
 use App\Models\Endpoint;
 use Illuminate\Support\Facades\DB;
 
@@ -18,8 +19,8 @@ class StatisticsService
         return Endpoint::withCount(['logs as total_checks' => function ($query) {
             $query->select(DB::raw('count(*)'));
         }, 'logs as successful_checks' => function ($query) {
-            $query->where('status_code', '>=', 200)
-                ->where('status_code', '<', 400)
+            $query->where('status_code', '>=', StatusCode::OK->value)
+                ->where('status_code', '<', StatusCode::BAD_REQUEST->value)
                 ->select(
                     DB::raw('count(*)')
                 );

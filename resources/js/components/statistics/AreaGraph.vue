@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { AreaChart } from '@/components/ui/chart-area';
 import { useChartColors } from '@/composables/useChartColors';
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { route } from 'ziggy-js';
 const { chartColors, getRandomHSLColors } = useChartColors();
 
@@ -9,9 +9,12 @@ const responseTime = ref<Record<string, any>[]>([]);
 const labels = ref<string[]>([]);
 const colors = ref<string[]>([]);
 
+let intervalId: ReturnType<typeof setInterval>;
+
 const fetchResponseTime = async () => {
     try {
-        const response = await fetch(route('api.statistics.responseTime') + '?days=31');
+        responseTime.value = [];
+        const response = await fetch(route('api.statistics.responseTime') + '?days=1&split_type=decamin');
         const data = await response.json();
         data.labels.forEach((entry: string) => {
             labels.value.push(entry);
@@ -29,6 +32,11 @@ const fetchResponseTime = async () => {
 
 onMounted(() => {
     fetchResponseTime();
+    intervalId = setInterval(fetchResponseTime, 30_000);
+});
+
+onUnmounted(() => {
+    clearInterval(intervalId);
 });
 </script>
 

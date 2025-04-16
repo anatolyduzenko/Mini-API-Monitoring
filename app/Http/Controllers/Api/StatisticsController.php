@@ -84,8 +84,9 @@ class StatisticsController extends Controller
     public function getResponseTime(Request $request)
     {
         $days = $request->query('days', 7);
+        $splitType = $request->enum('split_type', SplitType::class);
 
-        $responseTime = $this->logsService->responseTime($days);
+        $responseTime = $this->logsService->responseTime($days, $splitType);
 
         $graphData = $responseTime->groupBy('date')
             ->map(function ($entries, $date) {
