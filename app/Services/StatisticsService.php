@@ -44,11 +44,7 @@ class StatisticsService
      */
     public function uptimeTrendData(int $days, SplitType $splitType = SplitType::DAILY, $endpointId = null)
     {
-        $dateSplit = match ($splitType) {
-            SplitType::DAILY => 'DATE(endpoint_logs.created_at) as date',
-            SplitType::HOURLY => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:00:00\') as date',
-            SplitType::DECAMIN => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:%i:00\') as date',
-        };
+        $dateSplit = $this->dateFormatter($splitType);
 
         $query = DB::table('endpoint_logs')
             ->select(
@@ -68,5 +64,14 @@ class StatisticsService
         return $query->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();
+    }
+
+    private function dateFormatter(SplitType $splitType)
+    {
+        return match ($splitType) {
+            SplitType::DAILY => 'DATE(endpoint_logs.created_at) as date',
+            SplitType::HOURLY => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:00:00\') as date',
+            SplitType::DECAMIN => 'DATE_FORMAT(endpoint_logs.created_at, \'%Y-%m-%d %H:%i:00\') as date',
+        };
     }
 }

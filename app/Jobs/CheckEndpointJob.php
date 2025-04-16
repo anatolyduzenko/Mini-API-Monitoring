@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Endpoint;
-use App\Services\EndpointCheckerService;
+use App\Services\CheckEndpointService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,7 +31,7 @@ class CheckEndpointJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(EndpointCheckerService $service): void
+    public function handle(CheckEndpointService $service): void
     {
         if (! $service->shouldCheck($this->endpoint)) {
             Log::info("Skipping {$this->endpoint->name}, checked recently.");

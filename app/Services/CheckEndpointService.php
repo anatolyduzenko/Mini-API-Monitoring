@@ -3,13 +3,12 @@
 namespace App\Services;
 
 use App\Models\Endpoint;
-use App\Models\EndpointLog;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class EndpointCheckerService
+class CheckEndpointService
 {
     public function shouldCheck(Endpoint $endpoint)
     {
@@ -25,13 +24,15 @@ class EndpointCheckerService
         $client = $this->prepareHttpClient($endpoint);
         $start = microtime(true);
 
-        try {
+        rescue(function () use ($client, $endpoint, $start) {
             $response = $client->send($endpoint->method, $endpoint->url);
             $time = round((microtime(true) - $start) * 1000);
-            $this->logSuccess($endpoint, $response->status(), $time);
-        } catch (\Exception $e) {
-            $this->logFailure($endpoint, $e);
-        }
+            Log::info("Checked {$endpoint->name}: {$response->status()} in {$time}ms");
+            LogsService::logSuccess($endpoint, $response->status(), $time);
+        }, function ($e) use ($endpoint) {
+            Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());
+            LogsService::logFailure($endpoint, $e);
+        });
 
         Cache::put("endpoint_check::{$endpoint->id}", now()->timestamp);
     }
@@ -59,17 +60,7 @@ class EndpointCheckerService
         ]);
 
         if ($authResponse->successful()) {
-            $tokenKey = $endpoint->auth_token_name ?? 'token';
-            $token = data_get($authResponse->json(), $tokenKey);
-
-            if ($token) {
-                $endpoint->auth_token = $token;
-                $endpoint->save();
-
-                return $client->withToken($token);
-            }
-
-            Log::warning("Token not found using key [{$tokenKey}]");
+            $client = $this->checkResponse($client, $endpoint, $authResponse);
         } else {
             Log::warning("Auth failed for {$endpoint->name}");
         }
@@ -77,27 +68,20 @@ class EndpointCheckerService
         return $client;
     }
 
-    private function logSuccess(Endpoint $endpoint, int $status, float $time)
+    private function checkResponse(PendingRequest $client, Endpoint $endpoint, $authResponse)
     {
-        Log::info("Checked {$endpoint->name}: {$status} in {$time}ms");
+        $tokenKey = $endpoint->auth_token_name ?? 'token';
+        $token = data_get($authResponse->json(), $tokenKey);
 
-        EndpointLog::create([
-            'endpoint_id' => $endpoint->id,
-            'status_code' => $status,
-            'response_time' => $time,
-            'created_at' => now(),
-        ]);
-    }
+        if (! $token) {
+            Log::warning("Token not found using key [{$tokenKey}]");
 
-    private function logFailure(Endpoint $endpoint, \Exception $e)
-    {
-        Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());
+            return $client;
+        }
 
-        EndpointLog::create([
-            'endpoint_id' => $endpoint->id,
-            'status_code' => 500,
-            'response_time' => null,
-            'created_at' => now(),
-        ]);
+        $endpoint->auth_token = $token;
+        $endpoint->save();
+
+        return $client->withToken($token);
     }
 }
