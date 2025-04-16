@@ -35,7 +35,7 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new CheckEndpointService();
+        $service = new CheckEndpointService;
 
         $this->assertTrue($service->shouldCheck($endpoint));
 
@@ -68,7 +68,7 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new CheckEndpointService();
+        $service = new CheckEndpointService;
         $service->check($endpoint);
 
         Http::assertSent(function ($request) {
@@ -108,7 +108,7 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new CheckEndpointService();
+        $service = new CheckEndpointService;
         $service->check($endpoint);
 
         Http::assertSent(function ($request) use ($fakeToken) {

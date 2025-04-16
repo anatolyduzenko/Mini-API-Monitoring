@@ -24,15 +24,15 @@ class CheckEndpointService
         $client = $this->prepareHttpClient($endpoint);
         $start = microtime(true);
 
-        try {
+        rescue(function () use ($client, $endpoint, $start) {
             $response = $client->send($endpoint->method, $endpoint->url);
             $time = round((microtime(true) - $start) * 1000);
             Log::info("Checked {$endpoint->name}: {$response->status()} in {$time}ms");
             LogsService::logSuccess($endpoint, $response->status(), $time);
-        } catch (\Exception $e) {
+        }, function ($e) use ($endpoint) {
             Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());
             LogsService::logFailure($endpoint, $e);
-        }
+        });
 
         Cache::put("endpoint_check::{$endpoint->id}", now()->timestamp);
     }
@@ -40,6 +40,7 @@ class CheckEndpointService
     private function prepareHttpClient(Endpoint $endpoint)
     {
         $client = Http::timeout(10);
+
         return match ($endpoint->auth_type) {
             'basic' => $client->withBasicAuth($endpoint->username, $endpoint->password),
             'token' => $this->tokenAuthClient($client, $endpoint),
@@ -59,17 +60,7 @@ class CheckEndpointService
         ]);
 
         if ($authResponse->successful()) {
-            $tokenKey = $endpoint->auth_token_name ?? 'token';
-            $token = data_get($authResponse->json(), $tokenKey);
-
-            if ($token) {
-                $endpoint->auth_token = $token;
-                $endpoint->save();
-
-                return $client->withToken($token);
-            }
-
-            Log::warning("Token not found using key [{$tokenKey}]");
+            $client = $this->checkResponse($client, $endpoint, $authResponse);
         } else {
             Log::warning("Auth failed for {$endpoint->name}");
         }
@@ -77,4 +68,20 @@ class CheckEndpointService
         return $client;
     }
 
+    private function checkResponse(PendingRequest $client, Endpoint $endpoint, $authResponse)
+    {
+        $tokenKey = $endpoint->auth_token_name ?? 'token';
+        $token = data_get($authResponse->json(), $tokenKey);
+
+        if (! $token) {
+            Log::warning("Token not found using key [{$tokenKey}]");
+
+            return $client;
+        }
+
+        $endpoint->auth_token = $token;
+        $endpoint->save();
+
+        return $client->withToken($token);
+    }
 }

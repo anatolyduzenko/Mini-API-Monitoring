@@ -40,7 +40,6 @@ class StatisticsService
      * Prepares data for uptime Chart
      *
      * @param  int|null  $endpointId
-     *
      * @return \Illuminate\Support\Collection<int, \stdClass>
      */
     public function uptimeTrendData(int $days, SplitType $splitType = SplitType::DAILY, $endpointId = null)
@@ -67,7 +66,7 @@ class StatisticsService
             ->get();
     }
 
-    private function dateFormatter(SplitType $splitType)  
+    private function dateFormatter(SplitType $splitType)
     {
         return match ($splitType) {
             SplitType::DAILY => 'DATE(endpoint_logs.created_at) as date',
