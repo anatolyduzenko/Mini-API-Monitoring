@@ -16,7 +16,7 @@ class CheckEndpointService
         $lastChecked = Cache::get($key);
         $interval = $endpoint->check_interval * 60;
 
-        return ! $lastChecked || (now()->timestamp - $lastChecked) < $interval;
+        return ! $lastChecked || (now()->timestamp - $lastChecked) > $interval;
     }
 
     public function check(Endpoint $endpoint)

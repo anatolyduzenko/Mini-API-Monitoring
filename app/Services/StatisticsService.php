@@ -28,6 +28,7 @@ class StatisticsService
                     DB::raw('count(*)')
                 );
         }])
+            ->where('dashboard_visible', '=', 1)
             ->paginate($perPage)
             ->through(function ($endpoint) {
                 return [
@@ -38,6 +39,7 @@ class StatisticsService
                         : 0,
                 ];
             });
+
     }
 
     /**
@@ -59,7 +61,8 @@ class StatisticsService
                 DB::raw('COUNT(*) as total_checks')
             )
             ->leftJoin('endpoints', 'endpoints.id', '=', 'endpoint_id')
-            ->where('endpoint_logs.created_at', '>=', now()->subDays($days));
+            ->where('endpoint_logs.created_at', '>=', now()->subDays($days))
+            ->where('dashboard_visible', '=', 1);
 
         if ($endpointId) {
             $query->where('endpoint_id', '=', $endpointId);
