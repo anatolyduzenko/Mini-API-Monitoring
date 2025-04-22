@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AutoRefreshSwitch from '@/components/AutoRefreshSwitch.vue';
 import { AreaChart } from '@/components/ui/chart-area';
 import { useChartColors } from '@/composables/useChartColors';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -8,6 +9,7 @@ const { chartColors, getRandomHSLColors } = useChartColors();
 const responseTime = ref<Record<string, any>[]>([]);
 const labels = ref<string[]>([]);
 const colors = ref<string[]>([]);
+const autoRefreshEnabled = ref(true);
 
 let intervalId: ReturnType<typeof setInterval>;
 
@@ -32,7 +34,11 @@ const fetchResponseTime = async () => {
 
 onMounted(() => {
     fetchResponseTime();
-    intervalId = setInterval(fetchResponseTime, 30_000);
+    intervalId = setInterval(() => {
+        if (autoRefreshEnabled.value) {
+            fetchResponseTime();
+        }
+    }, 30_000);
 });
 
 onUnmounted(() => {
@@ -42,7 +48,10 @@ onUnmounted(() => {
 
 <template>
     <div class="p-5">
-        <h3 class="text-md mb-4 font-bold">API Response Time (Average)</h3>
+        <div class="flex items-start justify-between">
+            <h3 class="text-md mb-4 font-bold">API Response Time (Average)</h3>
+            <AutoRefreshSwitch v-model:enabled="autoRefreshEnabled" label="Auto-refresh" />
+        </div>
         <AreaChart v-if="labels.length" :data="responseTime" :categories="labels" index="date" :colors="colors" />
     </div>
 </template>

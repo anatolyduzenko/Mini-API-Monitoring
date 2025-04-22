@@ -30,6 +30,9 @@ Route::prefix('api')->group(function () {
     Route::get('/logs', LogsController::class)
         ->name('api.logs.index');
 
+    Route::patch('/endpoints/{endpoint}/toggle-visibility', [EndpointsController::class, 'toggleVisibility'])
+        ->name('api.endpoints.toggleVisibility');
+
     /**
      * Helper routes
      */

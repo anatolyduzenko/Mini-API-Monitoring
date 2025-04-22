@@ -2,6 +2,7 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { nextTick, onMounted, reactive, ref, watch } from 'vue';
@@ -19,12 +20,13 @@ const editableEndpoint = ref({
     headers: '',
     body: '',
     user_id: props.currentUser ? props.currentUser.id : null,
-    auth_type: '',
+    auth_type: 'none',
     auth_token: '',
     auth_token_name: '',
     auth_url: '',
     username: '',
     password: '',
+    dashboard_visible: false,
 });
 const errors = ref({ name: '', url: '' });
 const requestTypes = ref({});
@@ -55,10 +57,11 @@ watch(
                   user_id: props.currentUser ? props.currentUser.id : null,
                   auth_token: '',
                   auth_toke_name: '',
-                  auth_type: '',
+                  auth_type: 'none',
                   auth_url: '',
                   username: '',
                   password: '',
+                  dashboard_visible: false,
               };
     },
     { immediate: true },
@@ -85,6 +88,9 @@ const fetchAuthTypes = async () => {
 };
 
 const submitForm = () => {
+    if (!editableEndpoint.value.auth_type) {
+        editableEndpoint.value.auth_type = 'none';
+    }
     emit('submit', editableEndpoint.value);
 };
 
@@ -132,6 +138,7 @@ onMounted(() => {
             <Tabs default-value="basic">
                 <TabsList>
                     <TabsTrigger value="basic">Basic Parameters</TabsTrigger>
+                    <TabsTrigger value="extra">Extra Parameters</TabsTrigger>
                     <TabsTrigger value="authorization">Authorization</TabsTrigger>
                 </TabsList>
                 <TabsContent value="basic">
@@ -172,22 +179,6 @@ onMounted(() => {
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
-
-                                <Label class="mb-2 block" htmlFor="interval">Check Interval (minutes):</Label>
-                                <input
-                                    v-model="editableEndpoint.check_interval"
-                                    id="interval"
-                                    type="number"
-                                    class="mb-3 w-full rounded border bg-background p-2 text-foreground"
-                                />
-
-                                <Label class="mb-2 block" htmlFor="threshold">Alert threshold (percent):</Label>
-                                <input
-                                    v-model="editableEndpoint.alert_threshold"
-                                    id="threshold"
-                                    type="number"
-                                    class="mb-3 w-full rounded border bg-background p-2 text-foreground"
-                                />
                             </div>
                             <div v-if="editableEndpoint.method === 'POST'">
                                 <Label class="mb-2 block" htmlFor="headers">Headers (JSON):</Label>
@@ -219,6 +210,37 @@ onMounted(() => {
                                         {{ jsonErrors.body }}
                                     </AlertDescription>
                                 </Alert>
+                            </div>
+                        </div>
+                    </div>
+                </TabsContent>
+                <TabsContent value="extra">
+                    <div class="flex flex-1 flex-col gap-4 rounded-xl p-4">
+                        <div
+                            :class="[
+                                'grid auto-rows-max gap-4',
+                                editableEndpoint.method === 'POST' ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-2' : 'grid-cols-1',
+                            ]"
+                        >
+                            <div>
+                                <Label class="mb-2 block" htmlFor="interval">Check Interval (minutes):</Label>
+                                <input
+                                    v-model="editableEndpoint.check_interval"
+                                    id="interval"
+                                    type="number"
+                                    class="mb-3 w-full rounded border bg-background p-2 text-foreground"
+                                />
+
+                                <Label class="mb-2 block" htmlFor="threshold">Alert threshold (percent):</Label>
+                                <input
+                                    v-model="editableEndpoint.alert_threshold"
+                                    id="threshold"
+                                    type="number"
+                                    class="mb-3 w-full rounded border bg-background p-2 text-foreground"
+                                />
+
+                                <Label class="mb-2 block" htmlFor="threshold">Show on Dashboard:</Label>
+                                <Switch id="dashboard-visible" v-model="editableEndpoint.dashboard_visible" />
                             </div>
                         </div>
                     </div>
@@ -279,7 +301,7 @@ onMounted(() => {
                                 <Label class="mb-2 block" htmlFor="username">Token Name:</Label>
                                 <input
                                     v-model="editableEndpoint.auth_token_name"
-                                    id="token"
+                                    id="token-name"
                                     type="text"
                                     class="mb-3 w-full rounded border bg-background p-2 text-foreground"
                                 />

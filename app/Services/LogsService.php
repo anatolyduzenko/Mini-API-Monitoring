@@ -32,6 +32,7 @@ class LogsService
                 'endpoint_logs.response_time',
                 'endpoint_logs.created_at'
             )
+            ->where('dashboard_visible', '=', 1)
             ->orderBy(
                 'endpoint_logs.created_at',
                 'desc'
@@ -58,6 +59,7 @@ class LogsService
             )
             ->leftJoin('endpoints', 'endpoints.id', '=', 'endpoint_id')
             ->where('endpoint_logs.created_at', '>=', now()->subDays($days))
+            ->where('dashboard_visible', '=', 1)
             ->groupBy('date', 'endpoint_id', 'name')
             ->orderBy('date', 'asc')
             ->get();

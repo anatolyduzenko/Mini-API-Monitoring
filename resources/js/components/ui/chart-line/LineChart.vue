@@ -58,6 +58,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
     <VisXYContainer
       :margin="{ left: 20, right: 20 }"
       :data="data"
+      :yDomain="[0, 100]"
       :style="{ height: isMounted ? '100%' : 'auto' }"
     >
       <ChartCrosshair v-if="showTooltip" :colors="colors" :items="legendItems" :index="index" :custom-tooltip="customTooltip" />
@@ -87,7 +88,7 @@ function handleLegendItemClick(d: BulletLegendItemInterface, i: number) {
       <VisAxis
         v-if="showYAxis"
         type="y"
-        :tick-line="false"
+        :tick-line="true"
         :tick-format="yFormatter"
         :domain-line="false"
         :grid-line="showGridLine"

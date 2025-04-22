@@ -24,6 +24,7 @@ final class Endpoint extends Model
         'auth_token',
         'auth_token_name',
         'auth_url',
+        'dashboard_visible',
     ];
 
     public function logs()

@@ -39,6 +39,7 @@ final class UpdateEndpointRequest extends FormRequest
             'auth_token' => 'string|nullable|max:150',
             'auth_token_name' => 'string|nullable|max:150',
             'auth_url' => 'url|nullable',
+            'dashboard_visible' => 'boolean|nullable',
         ];
     }
 }
