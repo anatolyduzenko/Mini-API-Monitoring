@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import EndpointsDashboardSwitch from '@/components/endpoints/EndpointsDashboardSwitch.vue';
 import AreaGraph from '@/components/statistics/AreaGraph.vue';
 import RecentTable from '@/components/statistics/RecentTable.vue';
 import UptimeGraph from '@/components/statistics/UptimeGraph.vue';
@@ -6,6 +7,8 @@ import UptimeTable from '@/components/statistics/UptimeTable.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
+import { Settings } from 'lucide-vue-next';
+import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,6 +16,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
+const showSwitchPanel = ref(false);
+
+const toggleSwitchPanel = () => {
+    showSwitchPanel.value = !showSwitchPanel.value;
+};
 </script>
 
 <template>
@@ -20,6 +29,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+            <Settings class="h-5 w-5 text-gray-600" @click="toggleSwitchPanel" />
             <div class="grid auto-rows-min grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-2">
                 <div class="overflow-show relative aspect-video rounded-xl border border-sidebar-border/70 px-4 dark:border-sidebar-border">
                     <UptimeGraph />
@@ -36,6 +46,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <RecentTable />
                 </div>
             </div>
+            <EndpointsDashboardSwitch v-if="showSwitchPanel" @close="toggleSwitchPanel" />
         </div>
     </AppLayout>
 </template>

@@ -49,8 +49,10 @@ onUnmounted(() => {
 
 <template>
     <div class="p-5">
-        <h3 class="text-md mb-4 font-bold">API Uptime Trend (Last 7 Days)</h3>
-        <AutoRefreshSwitch v-model:enabled="autoRefreshEnabled" label="Auto-refresh" />
+        <div class="flex items-start justify-between">
+            <h3 class="text-md mb-4 font-bold">API Uptime Trend (Last 7 Days)</h3>
+            <AutoRefreshSwitch v-model:enabled="autoRefreshEnabled" label="Auto-refresh" />
+        </div>
         <LineChart
             v-if="labels.length"
             :data="uptimeTrends"

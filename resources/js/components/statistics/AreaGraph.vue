@@ -48,8 +48,10 @@ onUnmounted(() => {
 
 <template>
     <div class="p-5">
-        <h3 class="text-md mb-4 font-bold">API Response Time (Average)</h3>
-        <AutoRefreshSwitch v-model:enabled="autoRefreshEnabled" label="Auto-refresh" />
+        <div class="flex items-start justify-between">
+            <h3 class="text-md mb-4 font-bold">API Response Time (Average)</h3>
+            <AutoRefreshSwitch v-model:enabled="autoRefreshEnabled" label="Auto-refresh" />
+        </div>
         <AreaChart v-if="labels.length" :data="responseTime" :categories="labels" index="date" :colors="colors" />
     </div>
 </template>
