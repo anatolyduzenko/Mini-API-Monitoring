@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import AutoRefreshSwitch from '@/components/AutoRefreshSwitch.vue';
+import AutoRefreshSwitch from '@/components/statistics/AutoRefreshSwitch.vue';
+import ChartSettings from '@/components/statistics/ChartSettings.vue';
 import { LineChart } from '@/components/ui/chart-line';
 import { useChartColors } from '@/composables/useChartColors';
-import { onMounted, onUnmounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
 
 const uptimeTrends = ref<Record<string, any>[]>([]);
 const labels = reactive<string[]>([]);
 const colors = ref<string[]>([]);
 const { chartColors, getRandomHSLColors } = useChartColors();
-const autoRefreshEnabled = ref(true);
+const autoRefreshEnabled = ref(false);
+const splitType = ref('hourly');
 
 let intervalId: ReturnType<typeof setInterval>;
 
-const fetchUptimeTrend = async () => {
+const fetchUptimeTrend = async (splitType = 'hourly') => {
     try {
         uptimeTrends.value.splice(0);
-        const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7&split_type=hourly');
+        const response = await fetch(route('api.statistics.uptimeGraph') + '?days=7&split_type=' + splitType);
         const data = await response.json();
         data.labels.forEach((entry: string) => {
             labels.push(entry);
@@ -32,6 +34,16 @@ const fetchUptimeTrend = async () => {
         console.error('Error fetching uptime trend:', error);
     }
 };
+
+watch(splitType, (val) => {
+    clearInterval(intervalId);
+    fetchUptimeTrend(val);
+    intervalId = setInterval(() => {
+        if (autoRefreshEnabled.value) {
+            fetchUptimeTrend(val);
+        }
+    }, 30_000);
+});
 
 onMounted(() => {
     fetchUptimeTrend();
@@ -49,9 +61,14 @@ onUnmounted(() => {
 
 <template>
     <div class="p-5">
-        <div class="flex items-start justify-between">
-            <h3 class="text-md mb-4 font-bold">API Uptime Trend (Last 7 Days)</h3>
+        <div class="flex items-center justify-between border-b pb-2">
+            <h3 class="text-md font-bold">API Uptime Trend (Last 7 Days)</h3>
             <AutoRefreshSwitch v-model:enabled="autoRefreshEnabled" label="Auto-refresh" />
+            <ChartSettings
+                v-model="splitType"
+                :options="[{label: 'Hour', value:'hourly'}, {label: '10 Min', value:'decamin'}]" 
+                
+             />
         </div>
         <LineChart
             v-if="labels.length"
