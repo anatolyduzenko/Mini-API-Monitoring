@@ -27,6 +27,7 @@ class StatisticsServiceTest extends TestCase
         $endpoint = Endpoint::factory()->create([
             'name' => 'API A',
             'user_id' => $user->id,
+            'dashboard_visible' => 1,
         ]);
         EndpointLog::factory()->count(3)->create([
             'endpoint_id' => $endpoint->id,
@@ -52,6 +53,7 @@ class StatisticsServiceTest extends TestCase
         $endpoint = Endpoint::factory()->create([
             'name' => 'API Graph',
             'user_id' => $user->id,
+            'dashboard_visible' => 1,
         ]);
 
         EndpointLog::factory()->create([
