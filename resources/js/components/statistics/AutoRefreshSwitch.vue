@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { computed } from 'vue';

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch'; // adjust to your shadcn-vue path
 import { cn } from '@/lib/utils';
