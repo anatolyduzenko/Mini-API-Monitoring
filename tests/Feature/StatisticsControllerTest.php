@@ -5,10 +5,12 @@ use App\Enums\StatusCode;
 use App\Services\LogsService;
 use App\Services\StatisticsService;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StatisticsControllerTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_get_uptime_returns_data()
     {
         $user = User::factory()->create();
