@@ -158,7 +158,7 @@ const deleteToken = async ({ tokenId, password }) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow v-for="token in page.props.tokens">
+                        <TableRow v-for="token in page.props.tokens" v-bind:key="token.id">
                             <TableCell>{{ capitalize(token.name) }}</TableCell>
                             <TableCell>{{ token.expires_at }}</TableCell>
                             <TableCell>

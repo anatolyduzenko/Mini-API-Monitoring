@@ -45,8 +45,8 @@ onMounted(fetchEndpoints);
         <div :class="['w-[60%] rounded bg-background p-6 text-foreground shadow-lg']">
             <h3 class="mb-4 text-lg font-bold">Dashboard Endpoints Visibility</h3>
 
-            <div class="grid items-center gap-4 border-b pb-2 sm:grid-cols-3 xl:grid-cols-4">
-                <Card v-if="endpoints" v-for="endpoint in endpoints" :key="endpoint.id" :class="cn('w-auto', $attrs.class ?? '')">
+            <div v-if="endpoints" class="grid items-center gap-4 border-b pb-2 sm:grid-cols-3 xl:grid-cols-4">
+                <Card v-for="endpoint in endpoints" :key="endpoint.id" :class="cn('w-auto', $attrs.class ?? '')">
                     <CardContent class="flex items-center justify-between gap-4 p-3">
                         <Label :for="`switch-${endpoint.id}`" class="w-[65%] shrink-0 break-words"
                             ><p class="font-medium">{{ endpoint.name }}</p></Label
