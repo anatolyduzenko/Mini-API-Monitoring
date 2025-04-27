@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\StatusCodesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('api')->group(function () {
+Route::prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/endpoints', [EndpointsController::class, 'index'])
         ->name('api.endpoints.index');
 
@@ -69,4 +69,4 @@ Route::prefix('api')->group(function () {
         Route::get('/recent-logs', [StatisticsController::class, 'getRecentLogs'])
             ->name('api.statistics.recent');
     });
-})->middleware(['auth', 'verified']);
+});

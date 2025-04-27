@@ -66,9 +66,11 @@ onUnmounted(() => {
             <AutoRefreshSwitch v-model:enabled="autoRefreshEnabled" label="Auto-refresh" />
             <ChartSettings
                 v-model="splitType"
-                :options="[{label: 'Hour', value:'hourly'}, {label: '10 Min', value:'decamin'}]" 
-                
-             />
+                :options="[
+                    { label: 'Hour', value: 'hourly' },
+                    { label: '10 Min', value: 'decamin' },
+                ]"
+            />
         </div>
         <LineChart
             v-if="labels.length"

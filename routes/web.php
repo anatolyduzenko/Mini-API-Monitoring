@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+require __DIR__.'/api.php';
+
 Route::get('/', function () {
     return redirect('dashboard');
 })->middleware(['auth', 'verified'])->name('home');
@@ -19,7 +21,7 @@ Route::get('logs', function () {
     return Inertia::render('Logs');
 })->middleware(['auth', 'verified'])->name('logs');
 
-require __DIR__.'/api.php';
+// require __DIR__.'/api.php';
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
