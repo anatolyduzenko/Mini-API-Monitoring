@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch'; // adjust to your shadcn-vue path
 import { cn } from '@/lib/utils';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { Settings } from 'lucide-vue-next';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { eventBus } from '@/lib/eventBus';
 
 const endpoints = ref([]);
 
-const emit = defineEmits(['close']);
+const isDialogOpen = ref(false);
 
 const requestHeaders = new Headers();
 requestHeaders.append('Content-Type', 'application/json');
@@ -37,14 +50,31 @@ const toggleVisibility = async (endpoint, val) => {
     endpoint.dashbard_visible = data.dashbard_visible;
 };
 
-onMounted(fetchEndpoints);
+watch(isDialogOpen, (newVal) => {
+    if (newVal === false) {
+        eventBus.emit('reload-charts');
+    }
+});
+
+onMounted(() => {
+    fetchEndpoints();
+});
 </script>
 
 <template>
-    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-        <div :class="['w-[60%] rounded bg-background p-6 text-foreground shadow-lg']">
-            <h3 class="mb-4 text-lg font-bold">Dashboard Endpoints Visibility</h3>
-
+    <Dialog v-model:open="isDialogOpen">
+        <DialogTrigger as-child>
+            <button class="" variant="outline">
+                <component :is="Settings" />
+            </button>
+        </DialogTrigger>
+        <DialogContent class="sm:max-w-[60%]">
+            <DialogHeader>
+                <DialogTitle>Dashboard Endpoints Visibility</DialogTitle>
+                <DialogDescription>
+                    <p>Select endpoints available on dashboard.</p>
+                </DialogDescription>
+            </DialogHeader>
             <div v-if="endpoints" class="grid items-center gap-4 border-b pb-2 sm:grid-cols-3 xl:grid-cols-4">
                 <Card v-for="endpoint in endpoints" :key="endpoint.id" :class="cn('w-auto', $attrs.class ?? '')">
                     <CardContent class="flex items-center justify-between gap-4 p-3">
@@ -60,9 +90,11 @@ onMounted(fetchEndpoints);
                     </CardContent>
                 </Card>
             </div>
-            <div class="mt-4 flex justify-between">
-                <button @click="emit('close')" class="rounded bg-gray-400 px-4 py-2 text-white">Close</button>
-            </div>
-        </div>
-    </div>
+            <DialogFooter class="sm:justify-between">
+                <DialogClose as-child>
+                    <Button type="button" variant="secondary"> Close </Button>
+                </DialogClose>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
 </template>

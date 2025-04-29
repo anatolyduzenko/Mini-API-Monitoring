@@ -6,20 +6,23 @@ import { AreaChart } from '@/components/ui/chart-area';
 import { useChartColors } from '@/composables/useChartColors';
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
+import { eventBus } from '@/lib/eventBus';
+
 const { chartColors, getRandomHSLColors } = useChartColors();
 
 const responseTime = ref<Record<string, any>[]>([]);
 const labels = ref<string[]>([]);
 const colors = ref<string[]>([]);
 const autoRefreshEnabled = ref(false);
-
 const splitType = ref('decamin');
+const chartKey = ref(0);
 
 let intervalId: ReturnType<typeof setInterval>;
 
 const fetchResponseTime = async (splitType = 'decamin') => {
     try {
         responseTime.value.splice(0);
+        labels.value.splice(0);
         const response = await fetch(route('api.statistics.responseTime') + '?days=1&split_type=' + splitType);
         const data = await response.json();
         data.labels.forEach((entry: string) => {
@@ -34,6 +37,11 @@ const fetchResponseTime = async (splitType = 'decamin') => {
     } catch (error) {
         console.error('Error fetching uptime trend:', error);
     }
+};
+
+const reloadChart = () => {
+    chartKey.value++;
+    fetchResponseTime();
 };
 
 watch(splitType, (val) => {
@@ -53,9 +61,11 @@ onMounted(() => {
             fetchResponseTime();
         }
     }, 30_000);
+    eventBus.on('reload-charts', reloadChart);
 });
 
 onUnmounted(() => {
+    eventBus.off('reload-charts', reloadChart);
     clearInterval(intervalId);
 });
 </script>
@@ -73,6 +83,6 @@ onUnmounted(() => {
                 ]"
             />
         </div>
-        <AreaChart v-if="labels.length" :data="responseTime" :categories="labels" index="date" :colors="colors" />
+        <AreaChart v-if="labels.length" :key="chartKey" :data="responseTime" :categories="labels" index="date" :colors="colors" />
     </div>
 </template>
