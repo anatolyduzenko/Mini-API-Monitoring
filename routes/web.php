@@ -1,6 +1,5 @@
 <?php
 
-use AnatolyDuzenko\ConfigurablePrometheus\Services\MetricManager;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 

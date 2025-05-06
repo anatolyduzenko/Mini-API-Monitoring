@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class CheckEndpointService
 {
-    public function __construct(protected MetricManager $metrics)
-    {}
+    public function __construct(protected MetricManager $metrics) {}
+
     public function shouldCheck(Endpoint $endpoint)
     {
         $key = "endpoint_check::{$endpoint->id}";
@@ -92,7 +92,7 @@ class CheckEndpointService
     private function updateMetrics($endpoint, $status, $time)
     {
         $this->metrics->observe('endpoints', 'response_time_seconds', $time, [$endpoint->method, $status]);
-        $this->metrics->inc('endpoints', 'response_codes', [(string)$status]);
-        $this->metrics->inc('endpoints', 'checks_total',  ['total']);
+        $this->metrics->inc('endpoints', 'response_codes', [(string) $status]);
+        $this->metrics->inc('endpoints', 'checks_total', ['total']);
     }
 }

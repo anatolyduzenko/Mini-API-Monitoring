@@ -37,6 +37,6 @@ return [
         \App\Metrics\EndpointMetrics::class,
     ],
 
-    'endpoint' => 'prometheus'
-    
+    'endpoint' => 'prometheus',
+
 ];

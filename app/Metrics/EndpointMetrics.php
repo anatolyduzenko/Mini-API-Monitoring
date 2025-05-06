@@ -33,7 +33,7 @@ class EndpointMetrics implements MetricGroup
                 helpText: 'API response time in seconds.',
                 type: MetricType::Histogram,
                 labelNames: ['method', 'code'],
-                buckets: [0.1, 0.3, 0.5, 1, 2.5, 5, 10, 50, 100] 
+                buckets: [0.1, 0.3, 0.5, 1, 2.5, 5, 10, 50, 100]
             ),
             new MetricDefinition(
                 namespace: $this->namespace,
@@ -41,7 +41,7 @@ class EndpointMetrics implements MetricGroup
                 helpText: 'API response codes.',
                 type: MetricType::Counter,
                 labelNames: ['code']
-            )
+            ),
         ];
     }
 }
