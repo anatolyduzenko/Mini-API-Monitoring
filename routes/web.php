@@ -1,5 +1,6 @@
 <?php
 
+use AnatolyDuzenko\ConfigurablePrometheus\Services\MetricManager;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,8 +21,6 @@ Route::get('endpoints', function () {
 Route::get('logs', function () {
     return Inertia::render('Logs');
 })->middleware(['auth', 'verified'])->name('logs');
-
-// require __DIR__.'/api.php';
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

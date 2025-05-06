@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use AnatolyDuzenko\ConfigurablePrometheus\Services\MetricManager;
 use App\Enums\StatusCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreEndpointRequest;
@@ -29,13 +30,15 @@ class EndpointsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEndpointRequest $request)
+    public function store(StoreEndpointRequest $request, MetricManager $metrics)
     {
         $newEndpoint = Endpoint::create($request->validated());
 
         if (! $newEndpoint) {
             return response()->json(['error' => 'Failed to create endpoint'], StatusCode::INTERNAL_SERVER_ERROR->value);
         }
+
+        $metrics->set('endpoints', 'endpoints_total', Endpoint::count(), ['total']);
 
         return response()->json($newEndpoint, StatusCode::CREATED->value);
     }
@@ -65,9 +68,11 @@ class EndpointsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Endpoint $endpoint)
+    public function destroy(Endpoint $endpoint, MetricManager $metrics)
     {
         $endpoint->delete();
+
+        $metrics->set('endpoints', 'endpoints_total', Endpoint::count(), ['total']);
 
         return response()->json(['message' => 'Deleted successfully'], StatusCode::NO_CONTENT->value);
     }

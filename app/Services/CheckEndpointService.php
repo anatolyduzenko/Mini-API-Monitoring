@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use AnatolyDuzenko\ConfigurablePrometheus\Services\MetricManager;
 use App\Models\Endpoint;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Cache;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class CheckEndpointService
 {
+    public function __construct(protected MetricManager $metrics)
+    {}
     public function shouldCheck(Endpoint $endpoint)
     {
         $key = "endpoint_check::{$endpoint->id}";
@@ -26,9 +29,10 @@ class CheckEndpointService
 
         rescue(function () use ($client, $endpoint, $start) {
             $response = $client->send($endpoint->method, $endpoint->url);
-            $time = round((microtime(true) - $start) * 1000);
+            $time = (microtime(true) - $start) * 1000;
             Log::info("Checked {$endpoint->name}: {$response->status()} in {$time}ms");
-            LogsService::logSuccess($endpoint, $response->status(), $time);
+            LogsService::logSuccess($endpoint, $response->status(), round($time));
+            $this->updateMetrics($endpoint, $response->status(), $time);
         }, function ($e) use ($endpoint) {
             Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());
             LogsService::logFailure($endpoint, $e);
@@ -83,5 +87,12 @@ class CheckEndpointService
         $endpoint->save();
 
         return $client->withToken($token);
+    }
+
+    private function updateMetrics($endpoint, $status, $time)
+    {
+        $this->metrics->observe('endpoints', 'response_time_seconds', $time, [$endpoint->method, $status]);
+        $this->metrics->inc('endpoints', 'response_codes', [(string)$status]);
+        $this->metrics->inc('endpoints', 'checks_total',  ['total']);
     }
 }
