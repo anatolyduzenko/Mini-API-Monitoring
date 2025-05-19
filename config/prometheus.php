@@ -35,6 +35,7 @@ return [
     'groups' => [
         \AnatolyDuzenko\ConfigurablePrometheus\Metrics\Groups\UserMetrics::class,
         \App\Metrics\EndpointMetrics::class,
+        \App\Metrics\JobMetrics::class,
     ],
 
     'endpoint' => 'prometheus',
