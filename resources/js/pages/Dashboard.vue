@@ -7,7 +7,7 @@ import UptimeTable from '@/components/statistics/UptimeTable.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import EventListener from '@/components/EventListener.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -42,6 +42,14 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <RecentTable />
                 </div>
             </div>
+            <EventListener 
+                channel="endpoints"
+                :event="['.EndpointFailure', '.EndpointRecovered']"
+                :showToast="true"
+                :toastOptions="{
+                    duration: 5000,
+                }"
+            />
         </div>
     </AppLayout>
 </template>

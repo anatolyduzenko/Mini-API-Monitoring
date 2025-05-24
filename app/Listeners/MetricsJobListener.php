@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use AnatolyDuzenko\ConfigurablePrometheus\Services\MetricManager;
+use AnatolyDuzenko\ConfigurablePrometheus\Contracts\MetricManagerInterface;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Events\Attributes\AsEventListener;
 use Illuminate\Queue\Events\JobFailed;
@@ -13,7 +13,7 @@ class MetricsJobListener
     /**
      * Create the event listener.
      */
-    public function __construct(protected MetricManager $metrics) {}
+    public function __construct(protected MetricManagerInterface $metrics) {}
 
     #[AsEventListener]
     public function handleJobProcessed(JobProcessed $event)

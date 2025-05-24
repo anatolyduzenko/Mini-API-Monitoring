@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use AnatolyDuzenko\ConfigurablePrometheus\Services\MetricManager;
+use AnatolyDuzenko\ConfigurablePrometheus\Contracts\MetricManagerInterface;
+use App\Listeners\Monitoring\DTO\StatusChangeDTO;
 use App\Models\Endpoint;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Cache;
@@ -11,7 +12,11 @@ use Illuminate\Support\Facades\Log;
 
 class CheckEndpointService
 {
-    public function __construct(protected MetricManager $metrics) {}
+    public function __construct(
+        protected MetricManagerInterface $metrics,
+        protected MonitoringDispatcherService $statusTransitionService,
+        protected LogsService $logsService
+    ) {}
 
     public function shouldCheck(Endpoint $endpoint)
     {
@@ -31,11 +36,12 @@ class CheckEndpointService
             $response = $client->send($endpoint->method, $endpoint->url);
             $time = (microtime(true) - $start) * 1000;
             Log::info("Checked {$endpoint->name}: {$response->status()} in {$time}ms");
-            LogsService::logSuccess($endpoint, $response->status(), round($time));
+            $this->logsService->logSuccess($endpoint, $response->status(), round($time));
+            $this->statusTransitionService->handle(new StatusChangeDTO($endpoint, $response->status()));
             $this->updateMetrics($endpoint, $response->status(), $time);
         }, function ($e) use ($endpoint) {
             Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());
-            LogsService::logFailure($endpoint, $e);
+            $this->logsService->logFailure($endpoint, $e);
         });
 
         Cache::put("endpoint_check::{$endpoint->id}", now()->timestamp);

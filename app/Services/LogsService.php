@@ -65,7 +65,7 @@ class LogsService
             ->get();
     }
 
-    public static function logSuccess(Endpoint $endpoint, int $status, float $time)
+    public function logSuccess(Endpoint $endpoint, int $status, float $time)
     {
         EndpointLog::create([
             'endpoint_id' => $endpoint->id,
@@ -75,7 +75,7 @@ class LogsService
         ]);
     }
 
-    public static function logFailure(Endpoint $endpoint, \Exception $e)
+    public function logFailure(Endpoint $endpoint, \Exception $e)
     {
         EndpointLog::create([
             'endpoint_id' => $endpoint->id,
