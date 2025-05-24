@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use AnatolyDuzenko\ConfigurablePrometheus\Services\MetricManager;
+use AnatolyDuzenko\ConfigurablePrometheus\Contracts\MetricManagerInterface;
 use App\Enums\StatusCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreEndpointRequest;
@@ -30,7 +30,7 @@ class EndpointsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEndpointRequest $request, MetricManager $metrics)
+    public function store(StoreEndpointRequest $request, MetricManagerInterface $metrics)
     {
         $newEndpoint = Endpoint::create($request->validated());
 
@@ -68,7 +68,7 @@ class EndpointsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Endpoint $endpoint, MetricManager $metrics)
+    public function destroy(Endpoint $endpoint, MetricManagerInterface $metrics)
     {
         $endpoint->delete();
 

@@ -1,5 +1,13 @@
 import '../css/app.css';
 
+declare global {
+    interface Window {
+        Pusher: any,
+        Echo: any,
+    }
+}
+import './echo';
+
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';

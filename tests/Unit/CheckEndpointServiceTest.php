@@ -2,19 +2,50 @@
 
 namespace Tests\Unit;
 
+use AnatolyDuzenko\ConfigurablePrometheus\Contracts\MetricManagerInterface;
 use App\Enums\StatusCode;
 use App\Models\Endpoint;
 use App\Models\User;
 use App\Services\CheckEndpointService;
+use App\Services\LogsService;
+use App\Services\MonitoringDispatcherService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Mockery;
 use Tests\TestCase;
 
 class CheckEndpointServiceTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $metricsMock;
+
+    protected $transitionMock;
+
+    protected $logsMock;
+
+    protected CheckEndpointService $service;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->metricsMock = Mockery::mock(MetricManagerInterface::class);
+        $this->transitionMock = Mockery::mock(MonitoringDispatcherService::class);
+        $this->logsMock = Mockery::mock(LogsService::class);
+
+        $this->service = new CheckEndpointService(
+            $this->metricsMock,
+            $this->transitionMock,
+            $this->logsMock
+        );
+        $this->transitionMock->shouldReceive('handle')->once();
+        $this->metricsMock->shouldReceive('observe')->once();
+        $this->metricsMock->shouldReceive('inc');
+
+    }
 
     public function test_it_checks_endpoint_and_logs_success()
     {
@@ -35,16 +66,10 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new CheckEndpointService;
+        $this->logsMock->shouldReceive('logSuccess')->andReturnNull();
+        $this->assertTrue($this->service->shouldCheck($endpoint));
 
-        $this->assertTrue($service->shouldCheck($endpoint));
-
-        $service->check($endpoint);
-
-        $this->assertDatabaseHas('endpoint_logs', [
-            'endpoint_id' => $endpoint->id,
-            'status_code' => StatusCode::OK->value,
-        ]);
+        $this->service->check($endpoint);
     }
 
     public function test_it_checks_endpoint_with_basic_auth()
@@ -68,17 +93,16 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new CheckEndpointService;
-        $service->check($endpoint);
+        // $this->transitionMock->shouldReceive('handle')->once();
+        // $this->metricsMock->shouldReceive('observe')->once();
+        // $this->metricsMock->shouldReceive('inc');
+        $this->logsMock->shouldReceive('logSuccess')->andReturnNull();
+
+        $this->service->check($endpoint);
 
         Http::assertSent(function ($request) {
             return $request->hasHeader('Authorization', 'Basic '.base64_encode('john:secret'));
         });
-
-        $this->assertDatabaseHas('endpoint_logs', [
-            'endpoint_id' => $endpoint->id,
-            'status_code' => StatusCode::OK->value,
-        ]);
     }
 
     public function test_it_fetches_token_and_checks_with_token_auth()
@@ -108,18 +132,17 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $service = new CheckEndpointService;
-        $service->check($endpoint);
+        // $this->transitionMock->shouldReceive('handle')->once();
+        // $this->metricsMock->shouldReceive('observe')->once();
+        // $this->metricsMock->shouldReceive('inc');
+        $this->logsMock->shouldReceive('logSuccess')->andReturnNull();
+
+        $this->service->check($endpoint);
 
         Http::assertSent(function ($request) use ($fakeToken) {
             return $request->url() === 'https://token.test/status'
                 && $request->hasHeader('Authorization', 'Bearer '.$fakeToken);
         });
-
-        $this->assertDatabaseHas('endpoint_logs', [
-            'endpoint_id' => $endpoint->id,
-            'status_code' => StatusCode::OK->value,
-        ]);
 
         $this->assertEquals($fakeToken, $endpoint->fresh()->auth_token);
     }
