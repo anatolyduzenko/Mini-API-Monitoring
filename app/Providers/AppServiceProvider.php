@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (app()->environment('testing') && config('database.connections.mariadb.database') === 'apimonitoring') {
-            throw new \Exception('⚠️ Refusing to run tests on the production database!');
+            throw new \Exception('Refusing to run tests on the production database!');
         }
     }
 }
