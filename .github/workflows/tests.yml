@@ -25,6 +25,11 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
+      - name: Start Redis
+        uses: supercharge/redis-github-action@1.7.0
+        with:
+          redis-version: 7
+          
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
