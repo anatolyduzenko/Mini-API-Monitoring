@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Enums\SplitType;
 use App\Enums\StatusCode;
 use App\Models\User;
