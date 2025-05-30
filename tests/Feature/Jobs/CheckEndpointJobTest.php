@@ -68,7 +68,7 @@ class CheckEndpointJobTest extends TestCase
         $this->app->instance(MetricManagerInterface::class, $this->metricsMock);
         $this->app->instance(CheckEndpointService::class, $this->service);
         $this->logsMock->shouldReceive('logSuccess')->andReturnNull();
-        $this->transitionMock->shouldReceive('handle')->once();
+        $this->transitionMock->shouldReceive('handleMany')->once();
 
         CheckEndpointJob::dispatchSync($endpoint);
     }

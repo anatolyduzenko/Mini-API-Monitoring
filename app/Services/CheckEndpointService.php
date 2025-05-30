@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use AnatolyDuzenko\ConfigurablePrometheus\Contracts\MetricManagerInterface;
+use App\Listeners\Monitoring\DTO\ResponseTimeChangeDTO;
 use App\Listeners\Monitoring\DTO\StatusChangeDTO;
 use App\Models\Endpoint;
 use Illuminate\Http\Client\PendingRequest;
@@ -37,7 +38,10 @@ class CheckEndpointService
             $time = (microtime(true) - $start) * 1000;
             Log::info("Checked {$endpoint->name}: {$response->status()} in {$time}ms");
             $this->logsService->logSuccess($endpoint, $response->status(), round($time));
-            $this->statusTransitionService->handle(new StatusChangeDTO($endpoint, $response->status()));
+            $this->statusTransitionService->handleMany([
+                new StatusChangeDTO($endpoint, $response->status()),
+                new ResponseTimeChangeDTO($endpoint, $time),
+            ]);
             $this->updateMetrics($endpoint, $response->status(), $time);
         }, function ($e) use ($endpoint) {
             Log::error("Failed to check {$endpoint->name}: ".$e->getMessage());

@@ -14,7 +14,7 @@ class StatusChangeHandler implements MonitoringHandlerInterface
     protected int $threshold = 5;
 
     /**
-     * Create the event listener.
+     * Check input data type.
      */
     public function supports(MonitoringDTOInterface $monitoringDTOInterface): bool
     {

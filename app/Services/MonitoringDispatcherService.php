@@ -34,4 +34,11 @@ class MonitoringDispatcherService implements MonitoringHandlerInterface
 
         throw new \RuntimeException('No handler found for DTO: '.get_class($dto));
     }
+
+    public function handleMany(array $dtos): void
+    {
+        foreach ($dtos as $dto) {
+            $this->handle(dto: $dto);
+        }
+    }
 }
