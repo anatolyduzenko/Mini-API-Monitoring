@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Listeners\Monitoring\Interfaces\MonitoringHandlerInterface;
+use App\Listeners\Monitoring\ResponseTimeChangeHandler;
 use App\Listeners\Monitoring\StatusChangeHandler;
 use App\Services\MonitoringDispatcherService;
 use Illuminate\Support\ServiceProvider;
@@ -16,6 +17,7 @@ class BroadcastMonitoringProvider extends ServiceProvider
     {
         $this->app->tag([
             StatusChangeHandler::class,
+            ResponseTimeChangeHandler::class,
         ], 'monitoring.handlers');
 
         $this->app->singleton(MonitoringDispatcherService::class, function ($app) {

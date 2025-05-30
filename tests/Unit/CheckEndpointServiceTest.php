@@ -41,7 +41,7 @@ class CheckEndpointServiceTest extends TestCase
             $this->transitionMock,
             $this->logsMock
         );
-        $this->transitionMock->shouldReceive('handle')->once();
+        $this->transitionMock->shouldReceive('handleMany')->once();
         $this->metricsMock->shouldReceive('observe')->once();
         $this->metricsMock->shouldReceive('inc');
 
@@ -93,9 +93,6 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        // $this->transitionMock->shouldReceive('handle')->once();
-        // $this->metricsMock->shouldReceive('observe')->once();
-        // $this->metricsMock->shouldReceive('inc');
         $this->logsMock->shouldReceive('logSuccess')->andReturnNull();
 
         $this->service->check($endpoint);
@@ -132,9 +129,6 @@ class CheckEndpointServiceTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        // $this->transitionMock->shouldReceive('handle')->once();
-        // $this->metricsMock->shouldReceive('observe')->once();
-        // $this->metricsMock->shouldReceive('inc');
         $this->logsMock->shouldReceive('logSuccess')->andReturnNull();
 
         $this->service->check($endpoint);

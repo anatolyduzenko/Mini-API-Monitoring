@@ -44,7 +44,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
             <EventListener 
                 channel="endpoints"
-                :event="['.EndpointFailure', '.EndpointRecovered']"
+                :event="['.EndpointFailure', '.EndpointRecovered', '.EndpointResponseTimeChanged']"
                 :showToast="true"
                 :toastOptions="{
                     duration: 5000,
