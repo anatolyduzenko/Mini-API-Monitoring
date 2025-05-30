@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature\Jobs;
+
 use App\Jobs\EvaluateUptimeJob;
 use App\Models\Endpoint;
 use App\Models\EndpointLog;

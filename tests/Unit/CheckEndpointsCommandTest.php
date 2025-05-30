@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit;
+
 use App\Jobs\CheckEndpointJob;
 use App\Models\Endpoint;
 use App\Models\User;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Jobs;
 
 use AnatolyDuzenko\ConfigurablePrometheus\Contracts\MetricManagerInterface;
 use App\Jobs\CheckEndpointJob;

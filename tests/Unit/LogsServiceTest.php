@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit;
+
 use App\Enums\SplitType;
 use App\Enums\StatusCode;
 use App\Models\Endpoint;
